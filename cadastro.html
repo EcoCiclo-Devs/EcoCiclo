@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/global.css">
+    <title>Cadastro</title>
+</head>
+<body>
+    <title class="logo">EcoCiclo</title>
+     <form class="formfuncionario"  action="php/cadastroCidadao.php" method="post">
+            <h1 class="title">Cadastre-se</h1>
+
+            <label class="dados" for="nome" id="nomeC">Nome completo:</label>
+            <input type="text" name="nome" id="nome" placeholder="Digite seu nome...">
+
+            <label class="dados" for="cep" id="cepC">CEP:</label>
+            <input type="text" name="cep" id="cep" placeholder="00000-000" maxlength="9">
+
+            <label class="dados" for="estado" id="estadoC">Estado:</label>
+            <input type="text" name="estado" id="estado" placeholder="Primeiro digite o CEP" readonly>
+
+                <label class="dados" for="cidade">Cidade:</label>
+                <input type="text" name="cidade" id="cidade" placeholder="Primeiro digite o CEP" readonly>
+           
+                    <script src="https://unpkg.com/imask"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Máscara para o CPF
+    const cpfInput = document.getElementById('cpf');
+    IMask(cpfInput, {
+        mask: '000.000.000-00'
+    });
+
+    // Máscara para o CEP
+    const cepInput = document.getElementById('cep');
+    IMask(cepInput, {
+        mask: '00000-000'
+    });
+
+
+    // Consulta de endereço via CEP (mesmo script anterior)
+    cepInput.addEventListener('blur', function () {
+        const cep = this.value.replace(/\D/g, '');
+
+        if (cep.length !== 8) return;
+
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+            .then(response => {
+                if (!response.ok) throw new Error('Falha na conexão com o serviço de CEP');
+                return response.json();
+            })
+            .then(data => {
+                const estadoEl = document.getElementById('estado');
+                const cidadeEl = document.getElementById('cidade');
+
+                if (!data.erro) {
+                    if (estadoEl) estadoEl.value = data.uf || '';
+                    if (cidadeEl) cidadeEl.value = data.localidade || '';
+                } else {
+                    alert('CEP não encontrado');
+                    if (estadoEl) estadoEl.value = '';
+                    if (cidadeEl) cidadeEl.value = '';
+                }
+            })
+            .catch(err => {
+                console.error('Erro ao consultar CEP:', err);
+                alert('Erro ao consultar CEP');
+            });
+    });
+});
+</script>
+
+                
+            <label class="dados" for="cpf" id="cpfC">CPF:</label>
+            <input type="text" name="cpf" id="cpf" placeholder="000.000.000-00" maxlength="14">
+            <!-- email -->
+            <label class="dados" for="emailC" id="emailC">Email:</label>
+            <input type="email" name="email" id="email" placeholder="Digite seu email...">
+
+            <label class="dados" for="senha" id="senhaC">Criar senha:</label>
+            <div class="password-wrapper">
+                <input type="password" name="senha" id="senha">
+                <button type="button" class="toggle-password" aria-label="Mostrar senha">
+                    <svg class="icon-eye" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M12 5c-7 0-11 6-11 7s4 7 11 7 11-6 11-7-4-7-11-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/>
+                        <circle cx="12" cy="12" r="2.5"/>
+                    </svg>
+                </button>
+            </div>
+            <input class="botão" type="submit" value="Cadastrar">
+         </form>
+    </div>
+    <footer>
+        <p class="rodape"><b>EcoCiclo &copy; 2026</b></p>
+    </footer>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggle = document.querySelector('.toggle-password');
+        const pwd = document.getElementById('senha');
+        if (!toggle || !pwd) return;
+
+        const eyeSVG = '<svg class="icon-eye" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">\n                            <path d="M12 5c-7 0-11 6-11 7s4 7 11 7 11-6 11-7-4-7-11-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/>\n                            <circle cx="12" cy="12" r="2.5"/>\n                         </svg>';
+
+        const eyeOffSVG = '<svg class="icon-eye-off" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">\n                            <path d="M2 2l20 20-1.4 1.4L17 18.8C15.7 19.5 13.9 20 12 20c-7 0-11-6-11-7 0-1 .8-2.2 2.3-3.6L.6 4.4 2 3zM12 6c1.9 0 3.7.5 5 1.3l-1.6 1.6A5 5 0 0 0 12 8a5 5 0 0 0-4 1.8L6 9.8C7.6 8.6 9.7 6 12 6z"/>\n                         </svg>';
+
+        // inicial: mostrar olho (senha oculta)
+        toggle.innerHTML = eyeSVG;
+
+        toggle.addEventListener('click', function () {
+            const isPassword = pwd.type === 'password';
+            pwd.type = isPassword ? 'text' : 'password';
+            toggle.setAttribute('aria-label', isPassword ? 'Ocultar senha' : 'Mostrar senha');
+            toggle.innerHTML = isPassword ? eyeOffSVG : eyeSVG;
+        });
+    });
+    </script>
+</body>
+</html>
