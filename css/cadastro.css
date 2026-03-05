@@ -8,7 +8,7 @@ body{
     background-position: center;
 }
 
-.cadastrocidadao{
+.cadastrocidadao, .cadastrofuncionario{
     opacity: 0.87;
     align-items: center;
     margin: auto;
@@ -102,7 +102,7 @@ input{
 }
 
 @media (max-width: 1500px) {
-    .cadastrocidadao {
+    .cadastrocidadao, .cadastrofuncionario {
         margin-top: 50px;
         margin-bottom: 60px;
         width: 40%;
@@ -123,7 +123,7 @@ input{
     }
 }
 @media (max-width: 900px) {
-    .cadastrocidadao{
+    .cadastrocidadao, .cadastrofuncionario{
         margin-top: 50px;
         margin-bottom: 50px;
         width: 40%;
@@ -141,7 +141,7 @@ input{
     }
 }
 @media (max-width: 800px) {
-    .cadastrocidadao {
+    .cadastrocidadao, .cadastrofuncionario {
         margin-left: auto;
         width: 80%;
         padding: 15px;
@@ -161,7 +161,7 @@ input{
     }
 }
 @media (max-width: 700px) {
-    .cadastrocidadao {
+    .cadastrocidadao, .cadastrofuncionario {
         margin-left: auto;
         width: 50%;
         padding: 15px;
@@ -178,7 +178,7 @@ input{
     }
 }
 @media (max-width: 600px) {
-    .cadastrocidadao {
+    .cadastrocidadao, .cadastrofuncionario {
 
         width: 60%;
         padding: 15px;
@@ -195,7 +195,7 @@ input{
     }
 }
 @media (max-width: 500px) {
-    .cadastrocidadao {
+    .cadastrocidadao, .cadastrofuncionario {
         width: 60%;
         padding: 15px;
     }
@@ -211,7 +211,7 @@ input{
     }
 }
 @media (max-width: 400px) {
-    .cadastrocidadao {
+    .cadastrocidadao, .cadastrofuncionario {
         margin-left: auto;
         width: 70%;
         padding: 15px;
@@ -228,7 +228,7 @@ input{
     }
 }
 @media (max-width: 300px) {
-    .cadastrocidadao {
+    .cadastrocidadao, .cadastrofuncionario {
         margin-left: auto;
         width: 80%;
         padding: 15px;
