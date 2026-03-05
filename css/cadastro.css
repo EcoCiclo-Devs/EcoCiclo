@@ -1,11 +1,14 @@
 body{
+    width: auto;
     margin: auto;
     margin-bottom: auto;
     background-size: cover;
-    background-image: url(/images/fundoCadastro.png);
+    background-image: url(../images/fundoCadastro.png);
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
-.formfuncionario{
+.cadastrocidadao{
     opacity: 0.87;
     align-items: center;
     margin: auto;
@@ -98,19 +101,47 @@ input{
     font-size: 16px;
 }
 
-@media (max-width: 900px) {
-    .formfuncionario {
-        margin-left: auto;
-        width: 80%;
+@media (max-width: 1500px) {
+    .cadastrocidadao {
+        margin-top: 50px;
+        margin-bottom: 60px;
+        width: 40%;
         padding: 15px;
     }
 
     input {
         width: 98%;
+    }
+    .body{
+        width: auto;
+        margin: auto;
+        margin-bottom: auto;
+        background-size: cover;
+    }
+    .password-wrapper{
+        width: 98%;
+    }
+}
+@media (max-width: 900px) {
+    .cadastrocidadao{
+        margin-top: 50px;
+        margin-bottom: 50px;
+        width: 40%;
+        padding: 15px;
+    }
+
+    input {
+        width: 98%;
+    }
+    .body{
+        width: auto;
+        margin: auto;
+        margin-bottom: auto;
+        background-size: cover;
     }
 }
 @media (max-width: 800px) {
-    .formfuncionario {
+    .cadastrocidadao {
         margin-left: auto;
         width: 80%;
         padding: 15px;
@@ -118,43 +149,69 @@ input{
 
     input {
         width: 98%;
+    }
+    .password-wrapper{
+        width: 98%;
+    }
+    .body{
+        width: auto;
+        margin: auto;
+        margin-bottom: auto;
+        background-size: cover;
     }
 }
 @media (max-width: 700px) {
-    .formfuncionario {
+    .cadastrocidadao {
         margin-left: auto;
-        width: 80%;
+        width: 50%;
         padding: 15px;
     }
 
     input {
         width: 98%;
+    }
+    .body{
+        width: auto;
+        margin: auto;
+        margin-bottom: auto;
+        background-size: cover;
     }
 }
 @media (max-width: 600px) {
-    .formfuncionario {
-        margin-left: auto;
-        width: 80%;
+    .cadastrocidadao {
+
+        width: 60%;
         padding: 15px;
     }
 
     input {
         width: 98%;
+    }
+    .body{
+        width: auto;
+        margin: auto;
+        margin-bottom: auto;
+        background-size: cover;
     }
 }
 @media (max-width: 500px) {
-    .formfuncionario {
-        margin-left: auto;
-        width: 83%;
+    .cadastrocidadao {
+        width: 60%;
         padding: 15px;
     }
 
     input {
         width: 98%;
     }
+    .body{
+        width: auto;
+        margin: auto;
+        margin-bottom: auto;
+        background-size: cover;
+    }
 }
 @media (max-width: 400px) {
-    .formfuncionario {
+    .cadastrocidadao {
         margin-left: auto;
         width: 70%;
         padding: 15px;
@@ -163,9 +220,15 @@ input{
     input {
         width: 95%;
     }
+    .body{
+        width: auto;
+        margin: auto;
+        margin-bottom: auto;
+        background-size: cover;
+    }
 }
 @media (max-width: 300px) {
-    .formfuncionario {
+    .cadastrocidadao {
         margin-left: auto;
         width: 80%;
         padding: 15px;
@@ -173,5 +236,11 @@ input{
 
     input {
         width: 95%;
+    }
+    .body{
+        width: auto;
+        margin: auto;
+        margin-bottom: auto;
+        background-size: cover;
     }
 }

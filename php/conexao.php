@@ -1,7 +1,7 @@
 <?php
 class db {
     private $hostname = 'localhost';
-    private $bancodedados = '';
+    private $bancodedados = 'ecociclodb';
     private $usuario = 'root';
     private $senha = '';
     private $mysqli = null;

@@ -1,0 +1,84 @@
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(5px);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-box {
+  background: #fff;
+  width: 320px;
+  padding: 30px 25px;
+  border-radius: 18px;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+  animation: pop 0.25s ease-out;
+}
+
+.icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 3px solid #2ecc71;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 15px auto;
+  position: relative;
+}
+
+.checkmark {
+  width: 28px;
+  height: 14px;
+  border-left: 3px solid #2ecc71;
+  border-bottom: 3px solid #2ecc71;
+  transform: rotate(-45deg);
+  animation: draw 0.4s ease-out;
+}
+
+.modal-box h2 {
+  margin-top: 5px;
+  color: #2ecc71;
+  font-size: 20px;
+}
+
+.modal-box p {
+  color: #555;
+  margin: 10px 0 20px;
+}
+
+.modal-box button {
+  background: #2ecc71;
+  color: #fff;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+.modal-box button:hover {
+  background: #27ae60;
+}
+
+@keyframes pop {
+  from { transform: scale(0.8); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes draw {
+  from { width: 0; height: 0; }
+  to   { width: 28px; height: 14px; }
+}

@@ -6,8 +6,7 @@
     $cpf = $_POST['cpf'];
     $email = $_POST['email'];
     $senha = $_POST['senha'];
-
-    echo $nome . ' ' . $cep . ' ' . $estado . ' ' . $estado . ' ' . $cidade . ' ' . $cpf . ' ' . $email . ' ' . $senha;
+    $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
     require_once __DIR__ . '/conexao.php';
 
@@ -20,10 +19,14 @@
         die('Prepare failed: ' . mysqli_error($link));
     }
 
-    mysqli_stmt_bind_param($stmt, 'sssssss', $nome, $cep, $estado, $cidade, $cpf, $email, $senha);
+    mysqli_stmt_bind_param($stmt, 'sssssss', $nome, $cep, $estado, $cidade, $cpf, $email, $senhaHash);
 
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    die("Email inválido");
+    }
     if (mysqli_stmt_execute($stmt)) {
-        echo 'Cadastro realizado com sucesso';
+        header('Location: ../cadastrocidadao.html?sucesso=1');
+        exit;
     } else {
         echo 'Erro ao cadastrar: ' . mysqli_stmt_error($stmt);
     }

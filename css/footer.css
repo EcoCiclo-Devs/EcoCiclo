@@ -25,31 +25,31 @@ main {
 
 @media (max-width: 800px) {
     .rodape {
-        font-size: 18px;
+        font-size: 35px;
         padding: 10px 12px;
     }
 }
 @media (max-width: 700px) {
     .rodape {
-        font-size: 16px;
+        font-size: 25px;
         padding: 10px 12px;
     }
 }
 @media (max-width: 600px) {
     .rodape {
-        font-size: 16px;
+        font-size: 20px;
         padding: 10px 12px;
     }
 }
 @media (max-width: 500px) {
     .rodape {
-        font-size: 14px;
+        font-size: 20px;
         padding: 10px 12px;
     }
 }
 @media (max-width: 300px) {
     .rodape {
-        font-size: 12px;
+        font-size: 20px;
         padding: 10px 12px;
     }
 }
