@@ -1,0 +1,13 @@
+/* Ajusta o tamanho e contraste inicial */
+.social-icon {
+  height: 30px;
+  filter: brightness(0) invert(1); /* branco sobre fundo verde */
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* Hover: muda para cinza claro */
+.social-icon:hover {
+  transform: scale(1.2); /* opcional, mantém leve aumento */
+  filter: brightness(0.8) invert(0.7); /* deixa cinza claro */
+  cursor: pointer;
+}

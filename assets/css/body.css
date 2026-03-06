@@ -1,0 +1,329 @@
+/* =========================
+   BASE E RESET
+========================= */
+body {
+  font-family: 'Arial', sans-serif;
+  color: #333;
+  scroll-behavior: smooth;
+  margin: 0;
+}
+
+/* =========================
+   HERO / SEÇÃO INICIAL
+========================= */
+.hero {
+  padding: 100px 20px;
+  text-align: center;
+  background-color: #eaf6ea;
+  border-radius: 10px;
+}
+
+.hero h1 {
+  font-size: 48px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  font-size: 20px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* ###################### */
+/* ####### PULSAR  ######*/
+.hero {
+  padding: 120px 20px;
+}
+
+.eco-pulse {
+  font-size: 4rem;
+  animation: ecoPulse 3.5s ease-in-out infinite;
+}
+
+@keyframes ecoPulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.06);
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* =========================
+   SEÇÃO SOBRE
+========================= */
+#sobre {
+  padding: 80px 0;
+  /* topo e base */
+  background-color: #ffffff;
+}
+
+.sobre-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+  /* afastamento esquerdo e direito */
+  text-align: center;
+}
+
+.about-text h2 {
+  font-size: 36px;
+  margin-bottom: 30px;
+}
+
+.about-text p {
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+/* =========================
+   SEÇÃO COMO RECICLAR
+========================= */
+#como-reciclar {
+  padding: 80px 20px;
+  background-color: #f5f5f5;
+  text-align: center;
+}
+
+#como-reciclar h2 {
+  font-size: 36px;
+  margin-bottom: 40px;
+}
+
+#como-reciclar .card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+#como-reciclar .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+#como-reciclar .card-text {
+  font-size: 16px;
+}
+
+/* =========================
+   SEÇÃO FOLHAS
+========================= */
+.leaves {
+  padding: 80px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  background-color: #ffffff;
+}
+
+.leaves .leaf {
+  width: 100px;
+}
+
+.leaves-text h2 {
+  font-size: 36px;
+  margin-bottom: 15px;
+}
+
+.leaves-text p {
+  font-size: 18px;
+  max-width: 500px;
+}
+
+
+/* Ajuste das folhas laterais */
+.leaf {
+  height: 150px;
+  max-width: 150px;
+}
+
+/* Animação leve de flutuação */
+@keyframes floatLeft {
+  0% {
+    transform: translateY(-50%) translateX(0);
+  }
+
+  50% {
+    transform: translateY(-52%) translateX(-5px);
+  }
+
+  100% {
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+@keyframes floatRight {
+  0% {
+    transform: translateY(-50%) translateX(0);
+  }
+
+  50% {
+    transform: translateY(-48%) translateX(5px);
+  }
+
+  100% {
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+.floating-left {
+  animation: floatLeft 3s ease-in-out infinite;
+}
+
+.floating-right {
+  animation: floatRight 3s ease-in-out infinite;
+}
+
+/* Animação leve do título */
+.animated-text {
+  animation: fadePulse 3s ease-in-out infinite;
+}
+
+@keyframes fadePulse {
+  0% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+
+  100% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+}
+
+/* Responsivo: esconder folhas em telas pequenas */
+@media (max-width: 768px) {
+  .leaf {
+    display: none;
+  }
+}
+
+
+
+
+/* =========================
+   ANIMAÇÃO SEÇÃO FOLHAS
+========================= */
+/* Ajuste das folhas laterais */
+.leaf {
+  height: 150px;
+  max-width: 150px;
+}
+
+/* Animação leve de flutuação */
+@keyframes floatLeft {
+  0% {
+    transform: translateY(-50%) translateX(0);
+  }
+
+  50% {
+    transform: translateY(-52%) translateX(-5px);
+  }
+
+  100% {
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+@keyframes floatRight {
+  0% {
+    transform: translateY(-50%) translateX(0);
+  }
+
+  50% {
+    transform: translateY(-48%) translateX(5px);
+  }
+
+  100% {
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+.floating-left {
+  animation: floatLeft 3s ease-in-out infinite;
+}
+
+.floating-right {
+  animation: floatRight 3s ease-in-out infinite;
+}
+
+/* Animação leve do título */
+.animated-text {
+  animation: fadePulse 3s ease-in-out infinite;
+}
+
+@keyframes fadePulse {
+  0% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+
+  100% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+}
+
+/* Responsivo: esconder folhas em telas pequenas */
+@media (max-width: 768px) {
+  .leaf {
+    display: none;
+  }
+}
+
+/* =========================
+   RESPONSIVO
+========================= */
+@media (max-width: 768px) {
+
+  .hero h1,
+  #sobre h2,
+  #como-reciclar h2,
+  .leaves-text h2,
+  #ecopontos h2,
+  #contato h2 {
+    font-size: 28px;
+  }
+
+  .hero p,
+  .about-text p,
+  #como-reciclar .card-text,
+  .leaves-text p,
+  #ecopontos p,
+  #contato p {
+    font-size: 16px;
+  }
+
+  .sobre-container {
+    padding: 0 20px;
+  }
+
+  .leaves {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .leaves .leaf {
+    width: 80px;
+  }
+}
