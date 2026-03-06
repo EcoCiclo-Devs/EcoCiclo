@@ -28,15 +28,19 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Máscara para o CPF
     const cpfInput = document.getElementById('cpf');
-    IMask(cpfInput, {
-        mask: '000.000.000-00'
-    });
+    if (cpfInput && typeof IMask !== 'undefined') {
+        IMask(cpfInput, {
+            mask: '000.000.000-00'
+        });
+    }
 
     // Máscara para o CEP
     const cepInput = document.getElementById('cep');
-    IMask(cepInput, {
-        mask: '00000-000'
-    });
+    if (cepInput && typeof IMask !== 'undefined') {
+        IMask(cepInput, {
+            mask: '00000-000'
+        });
+    }
 
 
     // Consulta de endereço via CEP (mesmo script anterior)
