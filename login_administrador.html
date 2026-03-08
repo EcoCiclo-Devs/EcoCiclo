@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/modal.css">
+    <title>Cadastro</title>
+</head>
+<body>
+     <form class="login_administrador" action="php/login_administrador.php" method="post">
+            <h1 class="title">Login Administrador</h1>
+
+            <label class="dados" for="email" id="emailC">Número de Registro:</label>
+            <input type="email" name="email" id="email" placeholder="Digite seu número de registro..." required>
+
+            <label class="dados" for="senha" id="senhaC">Senha:</label>
+            <input type="password" name="senha" id="senha" placeholder="Digite sua senha..." required>
+           
+            <input class="logar" type="submit" value="Entrar">
+         </form>
+    </div>
+
+    <!-- Modal de sucesso -->
+     <!-- Teste Mudança -->
+    <div id="modal-sucesso" class="modal">
+            <div class="modal-box">
+                <div class="icon">
+                <span class="checkmark"></span>
+                </div>
+                <h2>Login concluído!</h2>
+                <p>Seu login foi realizado com sucesso.</p>
+                <button onclick="fecharModal()">Ok</button>
+            </div>
+    </div>       
+    <footer>
+        <p class="rodape"><b>EcoCiclo &copy; 2026</b></p>
+    </footer>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggle = document.querySelector('.toggle-password');
+        const pwd = document.getElementById('senha');
+        if (!toggle || !pwd) return;
+
+        const eyeSVG = '<svg class="icon-eye" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">\n                            <path d="M12 5c-7 0-11 6-11 7s4 7 11 7 11-6 11-7-4-7-11-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/>\n                            <circle cx="12" cy="12" r="2.5"/>\n                         </svg>';
+
+        const eyeOffSVG = '<svg class="icon-eye-off" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">\n                            <path d="M2 2l20 20-1.4 1.4L17 18.8C15.7 19.5 13.9 20 12 20c-7 0-11-6-11-7 0-1 .8-2.2 2.3-3.6L.6 4.4 2 3zM12 6c1.9 0 3.7.5 5 1.3l-1.6 1.6A5 5 0 0 0 12 8a5 5 0 0 0-4 1.8L6 9.8C7.6 8.6 9.7 6 12 6z"/>\n                         </svg>';
+
+        // inicial: mostrar olho (senha oculta)
+        toggle.innerHTML = eyeSVG;
+
+        toggle.addEventListener('click', function () {
+            const isPassword = pwd.type === 'password';
+            pwd.type = isPassword ? 'text' : 'password';
+            toggle.setAttribute('aria-label', isPassword ? 'Ocultar senha' : 'Mostrar senha');
+            toggle.innerHTML = isPassword ? eyeOffSVG : eyeSVG;
+        });
+    });
+    </script>
+        <script>
+            function abrirModal() {
+                document.getElementById("modal-sucesso").style.display = "flex";
+            }
+
+            function fecharModal() {
+                document.getElementById("modal-sucesso").style.display = "none";
+            }
+            // Abre automaticamente o modal de sucesso quando a página recebe ?sucesso=1
+            (function() {
+                try {
+                    const params = new URLSearchParams(window.location.search);
+                    if (params.get('sucesso') === '1') {
+                        abrirModal();
+                        // Remover query string para evitar reabrir após refresh
+                        const clean = window.location.pathname;
+                        window.history.replaceState({}, document.title, clean);
+                    }
+                } catch (e) {
+                    console.error('Erro ao processar parâmetro sucesso:', e);
+                }
+            })();
+        </script>
+</body>
+</html>
