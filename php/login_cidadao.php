@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     // sinaliza sucesso para mostrar modal após renderizar a página
                     $loginSuccess = true;
-                    $redirectAfter = './index.php';
+                    $redirectAfter = 'index.html'; // redireciona para a página inicial do cidadão
                 } else {
                     $msg = 'E-mail ou senha incorretos.';
                     $msg_class = 'erro';
