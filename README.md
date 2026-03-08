@@ -73,6 +73,7 @@ O EcoCiclo busca promover:
 
 ## Backend
 - **PHP**
+- **MySQL**
 
 ## Hardware
 - **Arduino**
