@@ -1,3 +1,5 @@
+<?php session_start(); ?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -24,7 +26,7 @@
 
   <title>EcoCiclo</title>
 </head>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <body>
   <!-- NAVBAR / MENU  -->
   <header class="header">
@@ -36,10 +38,37 @@
       <nav>
         <ul class="flex menu_list">
           <!-- <li><a href="#sobre">Sobre</a></li> -->
-          <li><a href="html/ecopontos.html">Ecopontos</a></li>
+          <li><a href="html/ecopontos.php">Ecopontos</a></li>
           <li><a href="html/faleconosco.html">Contato</a></li>
-          <li><a href="html/login_cidadao.html">Login</a></li>
-          <li><a href="html/painelrecicla.html" class="btn btn-success">PainelRecicla</a></li>
+          <?php if(isset($_SESSION['cidadao_nome'])): ?>
+
+            <li class="nav-item dropdown">
+
+            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown">
+
+            <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($_SESSION['cidadao_nome']); ?>&background=28a745&color=fff&size=32"
+            style="border-radius:50%">
+            </a>
+
+            <ul class="dropdown-menu">
+
+<li>
+<a class="dropdown-item" href="html/painelrecicla.php">Painel</a>
+</li>
+
+<li>
+<a class="dropdown-item text-danger" href="php/logout.php">Sair</a>
+</li>
+
+</ul>
+</li>
+
+
+            <?php else: ?>
+            
+            <li><a href="html/login.php">Login</a></li>
+            
+            <?php endif; ?>
         </ul>
       </nav>
     </article>
@@ -361,5 +390,16 @@
       </div>
     </div>
   </footer>
+</body>
+<script>
 
+const urlParams = new URLSearchParams(window.location.search);
+
+if(urlParams.get('cadastro') === 'sucesso'){
+
+    alert("Cadastro realizado com sucesso! Bem-vindo ao EcoCiclo 🌱");
+
+}
+
+</script>
 </html>
