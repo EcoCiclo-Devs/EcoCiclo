@@ -1,0 +1,369 @@
+<?php session_start(); ?>
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Favicon   -->
+  <link rel="icon" type="image/svg+xml" href="./assets/img/favicon.svg" />
+
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Animação -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+
+  <link rel="stylesheet" href="./assets/css/header.css">
+  <link rel="stylesheet" href="./assets/css/body.css">
+  <link rel="stylesheet" href="./assets/css/footer.css">
+
+
+
+  <title>EcoCiclo</title>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<body>
+  <!-- NAVBAR / MENU  -->
+  <header class="header">
+    <article class="menu_container flex">
+      <div id="titulo">
+        <img src="./assets/img/icone.svg" alt="Ícone EcoCiclo" class="logo">
+        <a href="#" class="text-success fw-bold fs-3">EcoCiclo</a>
+      </div>
+      <nav>
+        <ul class="flex menu_list">
+          <!-- <li><a href="#sobre">Sobre</a></li> -->
+          <li><a href="../views/ecopontos.php">Ecopontos</a></li>
+          <li><a href="../views/faleconosco.html">Contato</a></li>
+          <li><a href="../views/login.php">Login</a></li>
+          <?php if(isset($_SESSION['cidadao_nome'])): ?>
+
+            <li class="nav-item dropdown">
+
+            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown">
+
+            <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($_SESSION['cidadao_nome']); ?>&background=28a745&color=fff&size=32"
+            style="border-radius:50%">
+            </a>
+
+            <ul class="dropdown-menu">
+
+<li>
+<a class="dropdown-item" href="views/painelrecicla.php">Painel</a>
+</li>
+
+<li>
+<a class="dropdown-item text-danger" href="controllers/logout.php">Sair</a>
+</li>
+
+</ul>
+</li>
+
+          <?php endif; ?>
+        </ul>
+      </nav>
+    </article>
+
+  <!-- CORPO DO SITE -->
+  <main>
+    <section id="inicio"
+      class="hero py-5 position-relative d-flex justify-content-center align-items-center text-center">
+
+      <!-- Folha esquerda -->
+      <img src="./assets/img/folha.png" alt="folha esquerda" class="position-absolute top-50 d-none d-md-block"
+        style="height:150px; left:250px; transform: translateY(-50%);">
+
+      <!-- Conteúdo central -->
+      <div class="hero-content">
+        <h1 class="eco-pulse text-success fw-bold">
+          Bem-vindo ao EcoCiclo
+        </h1>
+        <p class="mt-3 text-success">
+          Monitoramento inteligente para coleta eficiente. 🌱♻️
+        </p>
+      </div>
+
+      <!-- Folha direita -->
+      <img src="./assets/img/folha.png" alt="folha direita" class="position-absolute top-50 d-none d-md-block"
+        style="height:150px; right:250px; transform: translateY(-50%) scaleX(-1);">
+
+    </section>
+
+
+    <!-- SEÇÃO SOBRE -->
+    <section id="sobre" class="py-5 bg-white">
+      <div class="container">
+
+        <!-- TÍTULO -->
+        <div class="row mb-5">
+          <div class="col text-center">
+            <h2 class="fw-bold" style="color: #ff7a00;">Tecnologia para uma Coleta Sustentável</h2>
+          </div>
+        </div>
+
+        <!-- CONTEÚDO -->
+        <div class="row align-items-center text-center">
+
+          <!-- COLUNA ESQUERDA -->
+          <div class="col-lg-4">
+            <div class="mb-5">
+              <h5 class="fw-bold" style="color: #ff7a00;">Sistema Inteligente</h5>
+              <p class="fs-6">
+                O EcoCiclo é um sistema inteligente de gestão e coleta seletiva de resíduos, desenvolvido para tornar o
+                descarte de materiais recicláveis mais eficiente e sustentável.
+              </p>
+            </div>
+
+            <div>
+              <h5 class="fw-bold" style="color: #ff7a00;">Monitoramento em tempo real</h5>
+              <p class="fs-6">
+                Sensores acoplados aos recipientes monitoram o nível de preenchimento e enviam alertas automáticos,
+                permitindo a otimização da coleta e redução de desperdícios.
+              </p>
+            </div>
+          </div>
+
+          <!-- IMAGEM CENTRAL -->
+          <div class="col-lg-4 my-4 my-lg-0 d-flex justify-content-center">
+            <img src="./assets/img/descarte.png" alt="Folhagem natural" class="img-fluid" style="max-height: 450px;">
+          </div>
+
+          <!-- COLUNA DIREITA -->
+          <div class="col-lg-4">
+            <div class="mb-5">
+              <h5 class="fw-bold" style="color: #ff7a00;">Pontos de coleta</h5>
+              <p class="fs-6">
+                O sistema disponibiliza um mapa interativo com pontos de coleta para plástico, papel, metal, vidro e
+                óleo,
+                facilitando o descarte correto e consciente.
+              </p>
+            </div>
+
+            <div>
+              <h5 class="fw-bold" style="color: #ff7a00;">Engajamento sustentável</h5>
+              <p class="fs-6">
+                O EcoCiclo promove a participação ativa de pessoas, comunidades e instituições, contribuindo para
+                cidades
+                mais limpas, responsáveis e sustentáveis.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- BANNERS TIPOS DE MATERIAIS -->
+    <section id="banners" class="py-5 bg-light">
+      <div class="container">
+
+        <!-- TÍTULO E TEXTO -->
+        <div class="text-center mb-5">
+          <h2 class="fw-bold text-warning mb-3">
+            Reciclar Começa na Separação Correta
+          </h2>
+          <p class="fs-5 text-muted mx-auto" style="max-width: 700px;">
+            Separar corretamente os resíduos recicláveis é um passo essencial para reduzir impactos ambientais
+            e tornar a coleta mais eficiente. Cada material exige cuidados específicos para garantir seu
+            reaproveitamento e contribuir para um ciclo sustentável.
+          </p>
+        </div>
+
+        <!-- CARDS CENTRALIZADOS -->
+        <div class="row g-4 justify-content-center">
+
+          <!-- Plástico -->
+          <div class="col-6 col-md-4 col-lg-2">
+            <div class="card text-center h-100 shadow-sm">
+              <img src="./assets/img/cesto-plastico.png" class="card-img-top mx-auto mt-3" alt="Plástico"
+                style="width: 60px;">
+              <div class="card-body">
+                <h6 class="fw-bold">Plástico</h6>
+                <p class="card-text small">
+                  Lave as embalagens e retire os resíduos antes do descarte correto. O plástico pode levar mais de 100
+                  anos para se decompor e causa sérios danos aos oceanos e à vida marinha.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Papel -->
+          <div class="col-6 col-md-4 col-lg-2">
+            <div class="card text-center h-100 shadow-sm">
+              <img src="./assets/img/cesto-papel.png" class="card-img-top mx-auto mt-3" alt="Papel"
+                style="width: 60px;">
+              <div class="card-body">
+                <h6 class="fw-bold">Papel</h6>
+                <p class="card-text small">
+                  Descarte apenas papéis limpos e secos, como folhas e caixas. Mesmo biodegradável, pode levar até 6
+                  meses para se decompor e seu reaproveitamento preserva árvores.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vidro -->
+          <div class="col-6 col-md-4 col-lg-2">
+            <div class="card text-center h-100 shadow-sm">
+              <img src="./assets/img/cesto-vidro.png" class="card-img-top mx-auto mt-3" alt="Vidro"
+                style="width: 60px;">
+              <div class="card-body">
+                <h6 class="fw-bold">Vidro</h6>
+                <p class="card-text small">
+                  Lave garrafas e potes, retire tampas e descarte com cuidado. O vidro pode permanecer na natureza por
+                  mais de 4 mil anos, sendo essencial sua reciclagem consciente.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Metal -->
+          <div class="col-6 col-md-4 col-lg-2">
+            <div class="card text-center h-100 shadow-sm">
+              <img src="./assets/img/cesto-metal.png" class="card-img-top mx-auto mt-3" alt="Metal"
+                style="width: 60px;">
+              <div class="card-body">
+                <h6 class="fw-bold">Metal</h6>
+                <p class="card-text small">
+                  Lave embalagens metálicas e reduza o volume quando possível. Metais podem levar até 500 anos para se
+                  decompor e a reciclagem economiza valiosa energia.
+                </p>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </section>
+    
+
+    <!-- SEÇÃO PÚBLICO-ALVO / PARTICIPE -->
+    <section id="publico-alvo" class="py-5 bg-white">
+      <div class="container">
+
+        <!-- TÍTULO CENTRAL -->
+        <div class="text-center mb-5">
+          <h2 class="fw-bold text-success mb-3">Participe do EcoCiclo</h2>
+          <p class="fs-5 text-muted mx-auto" style="max-width: 700px;">
+            Empresas, instituições e prefeituras: juntem-se a nós para otimizar a coleta de recicláveis e promover
+            cidades mais limpas e inteligentes.
+          </p>
+        </div>
+
+        <!-- CARDS DO PÚBLICO-ALVO -->
+        <div class="row g-4 justify-content-center">
+
+          <!-- Empresas e Condomínios -->
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100 text-center shadow-sm border-0">
+              <div class="card-body">
+                <!-- <img src="./assets/img/empresa.svg" alt="Empresas" class="mb-3" style="height:60px;"> -->
+                <h5 class="fw-bold text-warning mb-3">Empresas & Condomínios</h5>
+                <p class="card-text text-muted">
+                  Instale sensores nos recipientes de coleta seletiva e monitore em tempo real a ocupação, otimizando
+                  custos e logística.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Instituições -->
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100 text-center shadow-sm border-0">
+              <div class="card-body">
+                <!-- <img src="./assets/img/escola.svg" alt="Instituições" class="mb-3" style="height:60px;"> -->
+                <h5 class="fw-bold text-warning mb-3">Escolas & Universidades</h5>
+                <p class="card-text text-muted">
+                  Incentive a educação ambiental, engajando alunos e funcionários na separação correta de resíduos.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Prefeituras e Órgãos Públicos -->
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100 text-center shadow-sm border-0">
+              <div class="card-body">
+                <!-- <img src="./assets/img/prefeitura.svg" alt="Prefeituras" class="mb-3" style="height:60px;"> -->
+                <h5 class="fw-bold text-warning mb-3">Prefeituras & Órgãos Públicos</h5>
+                <p class="card-text text-muted">
+                  Gerencie os pontos de coleta em tempo real, planeje rotas eficientes e melhore a coleta seletiva em
+                  sua cidade.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- BOTÃO DE CHAMADA PARA AÇÃO -->
+        <div class="text-center mt-5">
+          <!-- href="faleconosco.html" PARA ATUALIZAR O DIRECIONAMENTO PARA A PAGINA -->
+          <a href="../views/faleconosco.html" class="btn btn-success btn-lg shadow-sm">Fale Conosco</a>
+        </div>
+      </div>
+    </section>
+
+ 
+    <!-- SEÇÃO FOLHAS + TEXTO CENTRAL ANIMADA -->
+    <section class="section leaves d-flex justify-content-center align-items-center position-relative py-4 bg-light">
+      <!-- Folha esquerda flutuante -->
+      <img src="./assets/img/folha.svg" alt="Folha esquerda"
+        class="folha-esquerda">
+
+      <!-- Conteúdo central -->
+      <div class="leaves-text text-center text-secondary px-4">
+        <h2 class="fw-bold animated-text mb-3">Cuide do Meio Ambiente</h2>
+        <p class="fs-6">
+          Pequenas ações hoje geram grandes mudanças amanhã. <br> Recicle, reutilize e faça a diferença!
+        </p>
+      </div>
+
+      <!-- Folha direita flutuante -->
+      <img src="./assets/img/planta.svg" alt="Folha direita"
+        class="folha-direita"
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer bg-success text-white py-5">
+    <div class="container">
+      <div class="row align-items-center">
+
+        <!-- Coluna central: vazia ou decorativa -->
+        <div class="col-md-4 d-flex justify-content-center">
+          <!-- Espaço vazio ou ícone decorativo se quiser -->
+        </div>
+
+        <!-- Coluna direita: EcoCiclo -->
+        <div class="col-md-4 d-flex flex-column align-items-center">
+          <h3 class="fw-bold mb-2">
+            <img src="./assets/img/tree-branco.svg" alt="Ícone EcoCiclo" class="logo me-2">
+            EcoCiclo
+          </h3>
+          <p class="mb-0 text-center">Monitoramento inteligente para coleta eficiente</p>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+</body>
+<script>
+
+const urlParams = new URLSearchParams(window.location.search);
+
+if(urlParams.get('cadastro') === 'sucesso'){
+
+    alert("Cadastro realizado com sucesso! Bem-vindo ao EcoCiclo 🌱");
+
+}
+
+</script>
+</html>
