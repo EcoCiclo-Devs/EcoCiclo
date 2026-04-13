@@ -39,6 +39,8 @@
         <ul class="flex menu_list">
           <!-- <li><a href="#sobre">Sobre</a></li> -->
           <li><a href="../views/ecopontos.php">Ecopontos</a></li>
+          <li><a href="painelrecicla.php">Painel Recicla</a></li>
+          <li><a href="../views/coleta_de_material.php">Coleta de Materiais</a></li>
           <li><a href="../views/faleconosco.html">Contato</a></li>
           <li><a href="../views/login.php">Login</a></li>
           <?php if(isset($_SESSION['cidadao_nome'])): ?>

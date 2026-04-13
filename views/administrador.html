@@ -18,7 +18,6 @@
 
 <body>
 
-    <!-- NAVBAR PADRÃO -->
     <header class="header">
         <article class="menu_container flex">
             <div id="titulo">
@@ -27,11 +26,10 @@
             </div>
             <nav>
                 <ul class="flex menu_list">
-                    <!-- <li><a href="#sobre">Sobre</a></li> -->
-                    <li><a href="ecopontos copy.php">Ecopontos</a></li>
-                    <!-- <li><a href="faleconosco.html">Contato</a></li> -->
+                    <li><a href="ecopontos.php">Ecopontos</a></li>
                     <li><a href="painelrecicla.php">PainelRecicla</a></li>
-                           <li><a href="login_admin.php" class="btn btn-success">Sair</a></li>
+                    <li><a href="coleta_de_material.php">Coleta de Materiais</a></li>
+                    <li><a href="login_admin.php" class="btn btn-success">Sair</a></li>
                 </ul>
             </nav>
         </article>
@@ -42,7 +40,6 @@
 
         <h1 class="text-success fw-bold text-center mb-4">Painel do Administrador</h1>
 
-        <!-- ABAS -->
         <ul class="nav nav-tabs mb-4">
             <li class="nav-item">
                 <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#alertas">Alertas</button>
@@ -53,11 +50,13 @@
             <li class="nav-item">
                 <button class="nav-link" data-bs-toggle="tab" data-bs-target="#relatorios">Relatórios</button>
             </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#agendamentos">Agendamentos da Semana</button>
+            </li>
         </ul>
 
         <div class="tab-content">
 
-            <!-- ALERTAS -->
             <div class="tab-pane fade show active" id="alertas">
                 <div class="card p-4 shadow-sm">
                     <h4 class="fw-bold text-danger mb-3">Lixeiras em Alerta</h4>
@@ -76,7 +75,6 @@
                 </div>
             </div>
 
-            <!-- ECOPONTOS -->
             <div class="tab-pane fade" id="ecopontos">
                 <div class="card p-4 shadow-sm">
                     <h4 class="fw-bold text-success mb-3">Cadastrar Novo Ecoponto</h4>
@@ -109,7 +107,6 @@
                 </div>
             </div>
 
-            <!-- RELATÓRIOS -->
             <div class="tab-pane fade" id="relatorios">
                 <div class="card p-4 shadow-sm">
                     <h4 class="fw-bold text-primary mb-3">Relatório Histórico</h4>
@@ -133,6 +130,31 @@
                     </p>
                 </div>
             </div>
+
+            <div class="tab-pane fade" id="agendamentos">
+                <div class="card p-4 shadow-sm border-success">
+                    <h4 class="fw-bold text-success mb-3">📅 Coletas Agendadas</h4>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Hora</th>
+                                    <th>Endereço</th>
+                                    <th>Materiais</th>
+                                    <th>Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaAgendamentosSemana">
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">Nenhum agendamento carregado.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </main>
 
@@ -140,20 +162,20 @@
     <div class="mb-3 pb-3"></div>
 
     <footer class="footer bg-success text-white py-5">
-    <div class="container">
-        <div class="row justify-content-center text-center">
+        <div class="container">
+            <div class="row justify-content-center text-center">
 
-            <div class="col-md-4 d-flex flex-column align-items-center">
-                <h3 class="fw-bold mb-2 d-flex align-items-center justify-content-center">
-                    <img src="../public/assets/img/icone.svg" alt="Ícone EcoCiclo" class="logo me-2">
-                    EcoCiclo
-                </h3>
-                <p class="mb-0">Monitoramento inteligente para coleta eficiente</p>
+                <div class="col-md-4 d-flex flex-column align-items-center">
+                    <h3 class="fw-bold mb-2 d-flex align-items-center justify-content-center">
+                        <img src="../public/assets/img/icone.svg" alt="Ícone EcoCiclo" class="logo me-2">
+                        EcoCiclo
+                    </h3>
+                    <p class="mb-0">Monitoramento inteligente para coleta eficiente</p>
+                </div>
+
             </div>
-
         </div>
-    </div>
-</footer>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -186,7 +208,73 @@
             link.download = "relatorio-ecociclo.csv";
             link.click();
         }
-    </script>
+
+        async function carregarAgendamentos() {
+    const tbody = document.getElementById("tabelaAgendamentosSemana");
+    
+    // Mostra uma mensagem de carregamento
+    tbody.innerHTML = '<tr><td colspan="5" class="text-center">Carregando...</td></tr>';
+    
+    try {
+        const response = await fetch('../controllers/listar_agendamentos.php'); 
+        
+        if (!response.ok) throw new Error('Erro ao buscar dados');
+
+        const dados = await response.json();
+
+        if (dados.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center">Nenhum agendamento encontrado.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = "";
+        dados.forEach(ag => {
+        let acaoHTML = "";
+
+        if (ag.status === "Concluído") {
+            acaoHTML = '<span class="badge bg-success">Concluído</span>';
+        } else {
+            acaoHTML = `<button class="btn btn-sm btn-success" onclick="concluirAgendamento(${ag.id})">Concluir</button>`;
+        }
+
+        tbody.innerHTML += `
+        <tr class="${ag.status === 'Concluído' ? 'table-light' : ''}">
+        <td>${ag.data_coleta}</td>
+        <td>${ag.hora_coleta}h</td>
+        <td>${ag.endereco}</td>
+        <td><small>${ag.materiais}</small></td>
+        <td>${acaoHTML}</td>
+        </tr>
+        `;
+        });
+    } catch (error) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Erro de conexão com o servidor.</td></tr>';
+        console.error(error);
+    }
+}
+
+window.onload = carregarAgendamentos;
+
+document.querySelector('button[data-bs-target="#agendamentos"]').addEventListener('shown.bs.tab', carregarAgendamentos);
+async function concluirAgendamento(id) {
+    if (!confirm("Deseja marcar esta coleta como concluída?")) return;
+
+    try {
+        const response = await fetch(`../controllers/concluir_agendamento.php?id=${id}`);
+        const resultado = await response.json();
+
+        if (resultado.sucesso) {
+            alert("Coleta concluída com sucesso!");
+            carregarAgendamentos();
+        } else {
+            alert("Erro ao concluir agendamento.");
+        }
+    } catch (error) {
+        console.error("Erro:", error);
+        alert("Erro de conexão com o servidor.");
+    }
+}
+</script>
 
 </body>
 

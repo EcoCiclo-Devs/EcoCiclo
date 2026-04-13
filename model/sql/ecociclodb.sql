@@ -149,3 +149,15 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+CREATE TABLE `agendamentos` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cep` varchar(9) NOT NULL,
+  `endereco` varchar(255) NOT NULL,
+  `data_coleta` date NOT NULL,
+  `hora_coleta` time NOT NULL,
+  `materiais` text DEFAULT NULL,
+  `status` varchar(20) DEFAULT 'Pendente',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+

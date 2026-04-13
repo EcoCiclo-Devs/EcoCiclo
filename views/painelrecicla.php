@@ -35,7 +35,9 @@
 
 <ul class="flex menu_list">
 
-<li><a href="ecopontos copy.php">EcoPontos</a></li>
+<li><a href="ecopontos.php">EcoPontos</a></li>
+<li><a href="painelrecicla.php">Painel Recicla</a></li>
+<li><a href="coleta_de_material.php">Coleta de Materiais</a></li>
 <li><a href="administrador.html">Painel Administrativo</a></li>
  <li><a href="login_admin.php" class="btn btn-success">Sair</a></li>
 
