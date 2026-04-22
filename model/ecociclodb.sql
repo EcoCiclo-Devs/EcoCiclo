@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 21/03/2026 às 17:09
+-- Tempo de geração: 22/04/2026 às 02:27
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -20,6 +20,22 @@ SET time_zone = "+00:00";
 --
 -- Banco de dados: `ecociclodb`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `agendamentos`
+--
+
+CREATE TABLE `agendamentos` (
+  `id` int(11) NOT NULL,
+  `cep` varchar(9) NOT NULL,
+  `endereco` varchar(255) NOT NULL,
+  `data_coleta` date NOT NULL,
+  `hora_coleta` time NOT NULL,
+  `materiais` text DEFAULT NULL,
+  `status` varchar(20) DEFAULT 'Pendente'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -90,31 +106,102 @@ CREATE TABLE `ecopontos` (
   `id` int(11) NOT NULL,
   `nome` varchar(150) NOT NULL,
   `cidade` varchar(100) NOT NULL,
+  `uf` char(2) DEFAULT NULL,
   `endereco` varchar(255) NOT NULL,
+  `cep` varchar(9) DEFAULT NULL,
+  `numero` varchar(20) DEFAULT NULL,
+  `complemento` varchar(100) DEFAULT NULL,
+  `bairro` varchar(100) DEFAULT NULL,
   `latitude` decimal(10,8) NOT NULL,
   `longitude` decimal(11,8) NOT NULL,
   `tipo_residuo` varchar(100) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `nivel_lixo` int(11) NOT NULL DEFAULT 0
+  `nivel_lixo` int(11) NOT NULL DEFAULT 0,
+  `dispositivo_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `ecopontos`
 --
 
-INSERT INTO `ecopontos` (`id`, `nome`, `cidade`, `endereco`, `latitude`, `longitude`, `tipo_residuo`, `created_at`, `nivel_lixo`) VALUES
-(1, 'Ecoponto Centro SP', 'São Paulo', 'Rua A, 123, São Paulo - SP', -23.55052000, -46.63330800, 'Plástico, Papel', '2026-03-09 00:52:11', 0),
-(2, 'Ecoponto Copacabana', 'Rio de Janeiro', 'Av. B, 456, Rio de Janeiro - RJ', -22.90680000, -43.17290000, 'Vidro, Metal', '2026-03-09 00:52:11', 0),
-(3, 'Ecoponto Savassi', 'Belo Horizonte', 'Praça C, 789, Belo Horizonte - MG', -19.91670000, -43.93450000, 'Óleo, Papel', '2026-03-09 00:52:11', 0),
-(4, 'Lixeira 4', 'Itapira', 'Campinas', -22.94668300, -47.05972514, 'Vidro', '2026-03-09 01:11:21', 0),
-(5, 'Ecoponto Centro', 'São Paulo', 'Rua A, 123, São Paulo - SP', -23.55052000, -46.63330800, 'Plástico, Papel', '2026-03-09 01:15:24', 68),
-(6, 'Ecoponto Praia', 'Rio de Janeiro', 'Av. B, 456, Rio de Janeiro - RJ', -22.90680000, -43.17290000, 'Vidro, Metal', '2026-03-09 01:15:24', 42),
-(7, 'Ecoponto Savassi', 'Belo Horizonte', 'Praça C, 789, Belo Horizonte - MG', -19.91670000, -43.93450000, 'Óleo, Papel', '2026-03-09 01:15:24', 87),
-(8, 'Platisco', 'Itapira', 'Rua José Soares de Campos, Recreio Santa Fé, Itapira, Região Imediata de Mogi Guaçu, Região Geográfica Intermediária de Campinas, São Paulo, 13977-175, Brasil', -22.43755108, -46.84208942, 'Vidro', '2026-03-09 01:28:24', 0);
+INSERT INTO `ecopontos` (`id`, `nome`, `cidade`, `uf`, `endereco`, `cep`, `numero`, `complemento`, `bairro`, `latitude`, `longitude`, `tipo_residuo`, `created_at`, `nivel_lixo`, `dispositivo_id`) VALUES
+(1, 'Ecoponto Centro SP', 'São Paulo', NULL, 'Rua A, 123, São Paulo - SP', NULL, NULL, NULL, NULL, -23.55052000, -46.63330800, 'Plástico, Papel', '2026-03-09 00:52:11', 0, NULL),
+(2, 'Ecoponto Copacabana', 'Rio de Janeiro', NULL, 'Av. B, 456, Rio de Janeiro - RJ', NULL, NULL, NULL, NULL, -22.90680000, -43.17290000, 'Vidro, Metal', '2026-03-09 00:52:11', 0, NULL),
+(3, 'Ecoponto Savassi', 'Belo Horizonte', NULL, 'Praça C, 789, Belo Horizonte - MG', NULL, NULL, NULL, NULL, -19.91670000, -43.93450000, 'Óleo, Papel', '2026-03-09 00:52:11', 0, NULL),
+(4, 'Lixeira 4', 'Itapira', NULL, 'Campinas', NULL, NULL, NULL, NULL, -22.94668300, -47.05972514, 'Vidro', '2026-03-09 01:11:21', 0, NULL),
+(5, 'Ecoponto Centro', 'São Paulo', NULL, 'Rua A, 123, São Paulo - SP', NULL, NULL, NULL, NULL, -23.55052000, -46.63330800, 'Plástico, Papel', '2026-03-09 01:15:24', 68, NULL),
+(6, 'Ecoponto Praia', 'Rio de Janeiro', NULL, 'Av. B, 456, Rio de Janeiro - RJ', NULL, NULL, NULL, NULL, -22.90680000, -43.17290000, 'Vidro, Metal', '2026-03-09 01:15:24', 42, NULL),
+(7, 'Ecoponto Savassi', 'Belo Horizonte', NULL, 'Praça C, 789, Belo Horizonte - MG', NULL, NULL, NULL, NULL, -19.91670000, -43.93450000, 'Óleo, Papel', '2026-03-09 01:15:24', 87, NULL),
+(14, 'Testando', 'Itapira', NULL, 'Rua Anita Garibaldi, 43 - 43 - Boa Vista - Itapira/SP - CEP: 13974-502', NULL, NULL, NULL, NULL, -22.43611100, -46.82166700, 'Papel', '2026-04-22 00:25:10', 0, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `esp32_dispositivos`
+--
+
+CREATE TABLE `esp32_dispositivos` (
+  `id` int(11) NOT NULL,
+  `nome_dispositivo` varchar(100) DEFAULT NULL,
+  `device_token` varchar(100) DEFAULT NULL,
+  `ativo` tinyint(1) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `esp32_dispositivos`
+--
+
+INSERT INTO `esp32_dispositivos` (`id`, `nome_dispositivo`, `device_token`, `ativo`) VALUES
+(2, 'ESP32 Joao', 'TOKEN123', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `historico_lixeiras`
+--
+
+CREATE TABLE `historico_lixeiras` (
+  `id` int(11) NOT NULL,
+  `ecoponto_id` int(11) NOT NULL,
+  `distancia_cm` decimal(6,2) NOT NULL,
+  `nivel_percentual` tinyint(3) UNSIGNED NOT NULL,
+  `sinal_valido` tinyint(1) NOT NULL DEFAULT 1,
+  `registrado_em` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `status_lixeiras`
+--
+
+CREATE TABLE `status_lixeiras` (
+  `id` int(11) NOT NULL,
+  `ecoponto_id` int(11) DEFAULT NULL,
+  `dispositivo_id` int(11) DEFAULT NULL,
+  `distancia_cm` decimal(6,2) DEFAULT NULL,
+  `nivel_percentual` int(11) DEFAULT NULL,
+  `atualizado_em` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `status_lixeiras`
+--
+
+INSERT INTO `status_lixeiras` (`id`, `ecoponto_id`, `dispositivo_id`, `distancia_cm`, `nivel_percentual`, `atualizado_em`) VALUES
+(1, 10, 2, 10.00, 80, '2026-04-21 21:06:48'),
+(2, 13, 2, 20.00, 57, '2026-04-21 21:24:54'),
+(29, 14, 2, 19.00, 60, '2026-04-21 21:27:44');
 
 --
 -- Índices para tabelas despejadas
 --
+
+--
+-- Índices de tabela `agendamentos`
+--
+ALTER TABLE `agendamentos`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Índices de tabela `cadastrofuncionario`
@@ -130,8 +217,35 @@ ALTER TABLE `ecopontos`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Índices de tabela `esp32_dispositivos`
+--
+ALTER TABLE `esp32_dispositivos`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `device_token` (`device_token`);
+
+--
+-- Índices de tabela `historico_lixeiras`
+--
+ALTER TABLE `historico_lixeiras`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_ecoponto_data` (`ecoponto_id`,`registrado_em`);
+
+--
+-- Índices de tabela `status_lixeiras`
+--
+ALTER TABLE `status_lixeiras`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `ecoponto_id` (`ecoponto_id`);
+
+--
 -- AUTO_INCREMENT para tabelas despejadas
 --
+
+--
+-- AUTO_INCREMENT de tabela `agendamentos`
+--
+ALTER TABLE `agendamentos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `cadastrofuncionario`
@@ -143,7 +257,35 @@ ALTER TABLE `cadastrofuncionario`
 -- AUTO_INCREMENT de tabela `ecopontos`
 --
 ALTER TABLE `ecopontos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT de tabela `esp32_dispositivos`
+--
+ALTER TABLE `esp32_dispositivos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de tabela `historico_lixeiras`
+--
+ALTER TABLE `historico_lixeiras`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `status_lixeiras`
+--
+ALTER TABLE `status_lixeiras`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+
+--
+-- Restrições para tabelas despejadas
+--
+
+--
+-- Restrições para tabelas `historico_lixeiras`
+--
+ALTER TABLE `historico_lixeiras`
+  ADD CONSTRAINT `fk_historico_ecoponto` FOREIGN KEY (`ecoponto_id`) REFERENCES `ecopontos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
