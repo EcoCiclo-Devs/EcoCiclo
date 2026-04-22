@@ -145,7 +145,6 @@
         </div>
       <?php endif; ?>
 
-      <!-- LISTA + MAPA -->
       <div class="row g-4">
         <div class="col-lg-4">
           <div class="sidebar-card">
@@ -179,7 +178,6 @@
         </div>
       </div>
 
-      <!-- FORMULÁRIO ADMIN CENTRALIZADO ABAIXO -->
       <?php if (!empty($_SESSION['is_admin']) && $_SESSION['is_admin'] === true): ?>
         <div class="row justify-content-center mt-4">
           <div class="col-lg-8 col-xl-6">
@@ -241,9 +239,8 @@
   <div class="container">
     <div class="row align-items-center">
       <div class="col-md-4 d-flex flex-column align-items-center mb-4 mb-md-0">
-
       </div>
-      
+
       <div class="col-md-4 d-flex flex-column align-items-center">
         <h3 class="fw-bold mb-2">
           <img src="../public/assets/img/tree-branco.svg" alt="Ícone EcoCiclo" class="logo me-2">
@@ -275,61 +272,64 @@
   let todosEcopontos = [];
   let markers = [];
   let adminMarker = null;
+  let marcadorBusca = null;
+  let primeiraCarga = true;
 
   function limparMarkers() {
     markers.forEach(marker => map.removeLayer(marker));
     markers = [];
   }
-  let marcadorBusca = null;
 
-async function buscarEndereco() {
-  const termo = document.getElementById('buscaEndereco').value.trim();
+  async function buscarEndereco() {
+    const termo = document.getElementById('buscaEndereco').value.trim();
 
-  if (!termo) {
-    alert('Digite um endereço, bairro ou cidade para buscar.');
-    return;
-  }
-
-  try {
-    const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=br&q=${encodeURIComponent(termo)}`
-    );
-
-    const resultados = await response.json();
-
-    if (!resultados || resultados.length === 0) {
-      alert('Endereço não encontrado.');
+    if (!termo) {
+      alert('Digite um endereço, bairro ou cidade para buscar.');
       return;
     }
 
-    const local = resultados[0];
-    const lat = parseFloat(local.lat);
-    const lon = parseFloat(local.lon);
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=br&q=${encodeURIComponent(termo)}`
+      );
 
-    map.setView([lat, lon], 16);
+      const resultados = await response.json();
 
-    if (marcadorBusca) {
-      map.removeLayer(marcadorBusca);
+      if (!resultados || resultados.length === 0) {
+        alert('Endereço não encontrado.');
+        return;
+      }
+
+      const local = resultados[0];
+      const lat = parseFloat(local.lat);
+      const lon = parseFloat(local.lon);
+
+      map.setView([lat, lon], 16);
+
+      if (marcadorBusca) {
+        map.removeLayer(marcadorBusca);
+      }
+
+      marcadorBusca = L.marker([lat, lon]).addTo(map)
+        .bindPopup(`
+          <strong>Local buscado</strong><br>
+          ${local.display_name}
+        `)
+        .openPopup();
+
+    } catch (error) {
+      console.error('Erro ao buscar endereço:', error);
+      alert('Não foi possível buscar o endereço agora.');
     }
-
-    marcadorBusca = L.marker([lat, lon]).addTo(map)
-      .bindPopup(`
-        <strong>Local buscado</strong><br>
-        ${local.display_name}
-      `)
-      .openPopup();
-
-  } catch (error) {
-    console.error('Erro ao buscar endereço:', error);
-    alert('Não foi possível buscar o endereço agora.');
   }
-}
-document.getElementById('buscaEndereco').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    buscarEndereco();
-  }
-});
+
+  document.getElementById('buscaEndereco').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      buscarEndereco();
+    }
+  });
+
   function corNivel(nivel) {
     if (nivel >= 80) return '#dc3545';
     if (nivel >= 50) return '#ffc107';
@@ -346,6 +346,10 @@ document.getElementById('buscaEndereco').addEventListener('keydown', function(e)
     }
 
     ecopontos.forEach(ponto => {
+      const atualizadoEm = ponto.atualizado_em
+        ? `<div class="ecoponto-info"><strong>Atualizado em:</strong> ${ponto.atualizado_em}</div>`
+        : '';
+
       const div = document.createElement('div');
       div.className = 'ecoponto-item';
 
@@ -356,10 +360,11 @@ document.getElementById('buscaEndereco').addEventListener('keydown', function(e)
         <div class="ecoponto-info"><strong>Resíduos:</strong> ${ponto.tipo_residuo || 'Não informado'}</div>
         <div class="ecoponto-info">
           <strong>Nível:</strong>
-          <span style="color:${corNivel(ponto.nivel_lixo)}; font-weight:700;">
-            ${ponto.nivel_lixo}%
+          <span style="color:${corNivel(Number(ponto.nivel_lixo))}; font-weight:700;">
+            ${Number(ponto.nivel_lixo)}%
           </span>
         </div>
+        ${atualizadoEm}
         <div class="d-flex gap-2 mt-2">
           <a class="btn btn-success btn-sm" target="_blank"
              href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(ponto.endereco)}">
@@ -382,8 +387,9 @@ document.getElementById('buscaEndereco').addEventListener('keydown', function(e)
         <div class="popup-info"><strong>Cidade:</strong> ${ponto.cidade}</div>
         <div class="popup-info"><strong>Endereço:</strong> ${ponto.endereco}</div>
         <div class="popup-info"><strong>Materiais aceitos:</strong> ${ponto.tipo_residuo || 'Não informado'}</div>
-        <div class="nivel-badge" style="background:${corNivel(ponto.nivel_lixo)};">
-          Nível atual: ${ponto.nivel_lixo}%
+        <div class="popup-info"><strong>Última atualização:</strong> ${ponto.atualizado_em || 'Sem dados'}</div>
+        <div class="nivel-badge" style="background:${corNivel(Number(ponto.nivel_lixo))};">
+          Nível atual: ${Number(ponto.nivel_lixo)}%
         </div>
         <div style="width:220px;height:220px;margin:0 auto;">
           <canvas id="grafico-${ponto.id}"></canvas>
@@ -425,7 +431,7 @@ document.getElementById('buscaEndereco').addEventListener('keydown', function(e)
     });
   }
 
-  function renderizarMapa(ecopontos) {
+  function renderizarMapa(ecopontos, ajustarBounds = false) {
     limparMarkers();
 
     const bounds = [];
@@ -436,7 +442,7 @@ document.getElementById('buscaEndereco').addEventListener('keydown', function(e)
       marker.bindPopup(criarPopupHTML(ponto));
 
       marker.on('popupopen', function () {
-        renderizarGrafico(ponto.id, ponto.nivel_lixo);
+        renderizarGrafico(ponto.id, Number(ponto.nivel_lixo));
       });
 
       marker.pontoId = ponto.id;
@@ -444,13 +450,15 @@ document.getElementById('buscaEndereco').addEventListener('keydown', function(e)
       bounds.push([ponto.latitude, ponto.longitude]);
     });
 
-    if (bounds.length > 0) {
+    if (ajustarBounds && bounds.length > 0) {
       map.fitBounds(bounds, { padding: [40, 40] });
     }
   }
 
   function preencherFiltroCidades(ecopontos) {
     const select = document.getElementById('cidadeFilter');
+    const cidadeSelecionada = select.value;
+
     select.innerHTML = '<option value="">Todas as cidades</option>';
 
     const cidades = [...new Set(ecopontos.map(e => e.cidade))].sort();
@@ -459,6 +467,9 @@ document.getElementById('buscaEndereco').addEventListener('keydown', function(e)
       const option = document.createElement('option');
       option.value = cidade;
       option.textContent = cidade;
+      if (cidade === cidadeSelecionada) {
+        option.selected = true;
+      }
       select.appendChild(option);
     });
   }
@@ -470,8 +481,10 @@ document.getElementById('buscaEndereco').addEventListener('keydown', function(e)
       ? todosEcopontos.filter(e => e.cidade === cidade)
       : todosEcopontos;
 
-    renderizarMapa(filtrados);
+    renderizarMapa(filtrados, primeiraCarga);
     renderizarLista(filtrados);
+
+    primeiraCarga = false;
   }
 
   function focarNoPonto(lat, lng, pontoId) {
@@ -485,7 +498,9 @@ document.getElementById('buscaEndereco').addEventListener('keydown', function(e)
 
   async function carregarEcopontos() {
     try {
-      const response = await fetch('../controllers/listar_ecopontos.php');
+      const response = await fetch('../controllers/listar_ecopontos.php?ts=' + Date.now(), {
+        cache: 'no-store'
+      });
 
       if (!response.ok) {
         throw new Error('Falha ao buscar ecopontos');
@@ -547,6 +562,7 @@ document.getElementById('buscaEndereco').addEventListener('keydown', function(e)
   <?php endif; ?>
 
   carregarEcopontos();
+  setInterval(carregarEcopontos, 30000);
 </script>
 
 </body>

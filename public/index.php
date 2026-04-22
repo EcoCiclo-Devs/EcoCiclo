@@ -60,7 +60,7 @@
 </li>
 
 <li>
-<a class="dropdown-item text-danger" href="controllers/logout.php">Sair</a>
+<a class="dropdown-item text-danger" href="../controllers/logout.php">Sair</a>
 </li>
 
 </ul>
