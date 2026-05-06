@@ -56,11 +56,12 @@
             </div>
             <nav>
                 <ul class="flex menu_list">
-                    <li><a href="painelrecicla.php">Painel Recicla</a></li>
-                    <li><a href="ecopontos.php">EcoPontos</a></li>
-                    <li><a href="coleta_de_material.php">Coleta de Materiais</a></li>
-                    <li><a href="administrador.html">Painel Administrativo</a></li>
-                    <li><a href="login.php" class="btn btn-success">Sair</a></li>
+                    <li><a href="../index.php">Início</a></li>
+                    <li><a href="../views/ecopontos.php">Ecopontos</a></li>
+                    <li><a href="../views/coleta_de_material.php">Coleta de Materiais</a></li>
+                    <li><a href="../views/faleconosco.html">Contato</a></li>
+                    <li><a href="../views/login.php">Login</a></li>
+                    <li><a href="../views/login.php" class="btn btn-success">Sair</a></li>
                 </ul>
             </nav>
         </article>

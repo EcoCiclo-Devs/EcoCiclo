@@ -122,10 +122,10 @@
     <nav>
       <ul class="flex menu_list">
         <li><a href="../public/index.php">Início</a></li>
-        <li><a href="painelrecicla.php">Painel Recicla</a></li>
         <li><a href="ecopontos.php">Ecopontos</a></li>
         <li><a href="coleta_de_material.php">Coleta de Materiais</a></li>
         <li><a href="faleconosco.html">Contato</a></li>
+        <li><a href="login.php" class="btn btn-success">Sair</a></li>
       </ul>
     </nav>
   </article>
