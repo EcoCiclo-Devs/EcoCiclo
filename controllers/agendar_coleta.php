@@ -5,10 +5,10 @@ $bancodedados = new db();
 $link = $bancodedados->conecta_mysql();
 
 // 2. Recebe os dados enviados pelo formulário da coleta
-$cep         = $_POST['cep'];
-$endereco    = $_POST['endereco'];
-$data_coleta = $_POST['data_coleta'];
-$hora_coleta = $_POST['hora_coleta'];
+$cep         = $_POST['cep'] ?? '';
+$endereco    = $_POST['endereco'] ?? '';
+$data_coleta = $_POST['data_coleta'] ?? '';
+$hora_coleta = $_POST['hora_coleta'] ?? '';
 
 $materiais = isset($_POST['material']) ? implode(", ", $_POST['material']) : "Não especificado";
 
@@ -22,14 +22,16 @@ if ($link) {
             VALUES ('$cep', '$endereco', '$data_coleta', '$hora_coleta', '$materiais')";
 
     if (mysqli_query($link, $sql)) {
-    echo "<script>
-            alert('Agendamento realizado com sucesso!');
-            window.location.href = '../views/coleta_de_material.php'; 
-          </script>";
+        header('Content-Type: application/json');
+        echo json_encode(['sucesso' => true, 'mensagem' => 'Agendamento realizado com sucesso!']);
     } else {
-    echo "Erro ao salvar no banco: " . mysqli_error($link);
+        header('Content-Type: application/json');
+        http_response_code(400);
+        echo json_encode(['sucesso' => false, 'erro' => 'Erro ao salvar no banco: ' . mysqli_error($link)]);
     }
 } else {
-    echo "Erro de conexão com o servidor MySQL.";
+    header('Content-Type: application/json');
+    http_response_code(500);
+    echo json_encode(['sucesso' => false, 'erro' => 'Erro de conexão com o servidor MySQL.']);
 }
 ?>

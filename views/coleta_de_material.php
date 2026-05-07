@@ -78,7 +78,7 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-6">
                         <div class="agenda-card">
-                            <form action="../controllers/agendar_coleta.php" method="POST" onsubmit="return validarEnvio()">
+                            <form action="../controllers/agendar_coleta.php" method="POST" onsubmit="validarEnvio(event)">
                                 
                                 <div class="mt-3">
                                     <label class="form-label fw-bold">CEP (Opcional)</label>
@@ -119,16 +119,51 @@
         </section>
     </main>
 
-    <footer class="footer bg-success text-white py-4 mt-5">
-        <div class="container text-center">
-            <h3 class="fw-bold mb-0">EcoCiclo</h3>
-            <small>© 2026 - Sustentabilidade Inteligente</small>
+    <!-- Modal de Sucesso -->
+    <div class="modal" id="modalSucesso">
+        <div class="modal-box">
+            <div class="icon">
+                <div class="checkmark"></div>
+            </div>
+            <h2>Sucesso!</h2>
+            <p>Seu agendamento foi realizado com sucesso!</p>
+            <button onclick="redirecionarParaHome()">OK</button>
+        </div>
+    </div>
+
+    <footer class="footer bg-success text-white py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-4 d-flex flex-column align-items-center mb-4 mb-md-0">
+                </div>
+
+                <div class="col-md-4 d-flex flex-column align-items-center">
+                    <h3 class="fw-bold mb-2">
+                        <img src="../public/assets/img/tree-branco.svg" alt="Ícone EcoCiclo" class="logo me-2">
+                        EcoCiclo
+                    </h3>
+                    <p class="mb-0 text-center">Monitoramento inteligente para coleta eficiente</p>
+                </div>
+            </div>
         </div>
     </footer>
 
+    <link rel="stylesheet" href="../public/assets/css/modal.css">
+
     <script>
+        function redirecionarParaHome() {
+            window.location.href = '../views/coleta_de_material.php';
+        }
+
+        function mostrarModal() {
+            const modal = document.getElementById('modalSucesso');
+            modal.style.display = 'flex';
+        }
+
         // Função para validar se horário e materiais foram preenchidos
-        function validarEnvio() {
+        function validarEnvio(event) {
+            event.preventDefault();
+            
             const horarioSelecionado = document.querySelector('input[name="hora_coleta"]:checked');
             if (!horarioSelecionado) {
                 alert("Por favor, selecione um horário disponível.");
@@ -142,7 +177,27 @@
                 return false;
             }
 
-            return true;
+            // Enviar via AJAX
+            const form = event.target;
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: form.method,
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    mostrarModal();
+                } else {
+                    alert('Erro ao agendar. Tente novamente.');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro de conexão. Tente novamente.');
+            });
+
+            return false;
         }
 
         async function buscarCEP() {
