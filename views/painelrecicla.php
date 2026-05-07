@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="icon" type="image/svg+xml" href="../public/assets/img/favicon.svg"/>
+<link rel="icon" type="image/svg+xml" href="../public/assets/img/favicon.svg" />
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -35,9 +35,7 @@
 
 <ul class="flex menu_list">
 
-<li><a href="ecopontos.php">EcoPontos</a></li>
 <li><a href="painelrecicla.php">Painel Recicla</a></li>
-<li><a href="coleta_de_material.php">Coleta de Materiais</a></li>
 <li><a href="administrador.html">Painel Administrativo</a></li>
  <li><a href="login_admin.php" class="btn btn-success">Sair</a></li>
 
