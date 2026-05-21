@@ -1,7 +1,7 @@
 <?php
 require_once '../config/database.php';
 
-header('Content-Type: text/plain; charset=utf-8');
+header('Content-Type: application/json; charset=utf-8');
 
 $bancodedados = new db();
 $conn = $bancodedados->conecta_mysql();
@@ -16,23 +16,37 @@ $porcentagem = isset($_POST['porcentagem'])
     ? (int)$_POST['porcentagem']
     : (isset($_GET['porcentagem']) ? (int)$_GET['porcentagem'] : null);
 
-$sinal_valido = isset($_POST['sinal_valido'])
-    ? (int)$_POST['sinal_valido']
-    : (isset($_GET['sinal_valido']) ? (int)$_GET['sinal_valido'] : 1);
-
 if ($token === '' || $distancia === null || $porcentagem === null) {
     http_response_code(400);
-    die("Dados incompletos.");
+    echo json_encode([
+        'success' => false,
+        'message' => 'Dados incompletos.'
+    ]);
+    exit;
+}
+
+if ($distancia < 0) {
+    http_response_code(400);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Distância inválida.'
+    ]);
+    exit;
 }
 
 if ($porcentagem < 0 || $porcentagem > 100) {
     http_response_code(400);
-    die("Porcentagem inválida.");
+    echo json_encode([
+        'success' => false,
+        'message' => 'Porcentagem inválida.'
+    ]);
+    exit;
 }
 
-$sql = "
+// Procura a ESP32 e o ecoponto vinculado
+$sqlBusca = "
 SELECT 
-    e.id AS ecoponto_id, 
+    e.id AS ecoponto_id,
     d.id AS dispositivo_id
 FROM esp32_dispositivos d
 INNER JOIN ecopontos e ON e.dispositivo_id = d.id
@@ -40,58 +54,88 @@ WHERE d.device_token = ?
 LIMIT 1
 ";
 
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $token);
-$stmt->execute();
-$result = $stmt->get_result();
+$stmtBusca = $conn->prepare($sqlBusca);
 
-if ($result->num_rows == 0) {
-    http_response_code(404);
-    die("ESP32 não vinculada a nenhum ecoponto.");
+if (!$stmtBusca) {
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Erro ao preparar busca do dispositivo.',
+        'error' => $conn->error
+    ]);
+    exit;
 }
 
-$dados = $result->fetch_assoc();
+$stmtBusca->bind_param("s", $token);
+$stmtBusca->execute();
+$resultBusca = $stmtBusca->get_result();
+
+if ($resultBusca->num_rows === 0) {
+    http_response_code(404);
+    echo json_encode([
+        'success' => false,
+        'message' => 'ESP32 não vinculada a nenhum ecoponto.'
+    ]);
+    exit;
+}
+
+$dados = $resultBusca->fetch_assoc();
 
 $ecoponto_id = (int)$dados['ecoponto_id'];
 $dispositivo_id = (int)$dados['dispositivo_id'];
 
-$stmt->close();
+$stmtBusca->close();
 
+// Atualiza ou insere o status atual da lixeira
 $sqlStatus = "
 INSERT INTO status_lixeiras (
     ecoponto_id,
     dispositivo_id,
     distancia_cm,
     nivel_percentual,
-    sinal_valido,
     atualizado_em
 )
-VALUES (?, ?, ?, ?, ?, NOW())
+VALUES (?, ?, ?, ?, NOW())
 ON DUPLICATE KEY UPDATE
     dispositivo_id = VALUES(dispositivo_id),
     distancia_cm = VALUES(distancia_cm),
     nivel_percentual = VALUES(nivel_percentual),
-    sinal_valido = VALUES(sinal_valido),
     atualizado_em = NOW()
 ";
 
 $stmtStatus = $conn->prepare($sqlStatus);
+
+if (!$stmtStatus) {
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Erro ao preparar atualização do status.',
+        'error' => $conn->error
+    ]);
+    exit;
+}
+
 $stmtStatus->bind_param(
-    "iidii",
+    "iidi",
     $ecoponto_id,
     $dispositivo_id,
     $distancia,
-    $porcentagem,
-    $sinal_valido
+    $porcentagem
 );
 
 if (!$stmtStatus->execute()) {
     http_response_code(500);
-    die("Erro ao atualizar status: " . $conn->error);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Erro ao atualizar status da lixeira.',
+        'error' => $stmtStatus->error
+    ]);
+    exit;
 }
 
 $stmtStatus->close();
 
+// Atualiza a tabela ecopontos, que é usada pelo mapa/listagem
 $sqlEcoponto = "
 UPDATE ecopontos
 SET 
@@ -101,15 +145,38 @@ WHERE id = ?
 ";
 
 $stmtEcoponto = $conn->prepare($sqlEcoponto);
+
+if (!$stmtEcoponto) {
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Erro ao preparar atualização do ecoponto.',
+        'error' => $conn->error
+    ]);
+    exit;
+}
+
 $stmtEcoponto->bind_param("ii", $porcentagem, $ecoponto_id);
 
 if (!$stmtEcoponto->execute()) {
     http_response_code(500);
-    die("Erro ao atualizar ecoponto: " . $conn->error);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Erro ao atualizar ecoponto.',
+        'error' => $stmtEcoponto->error
+    ]);
+    exit;
 }
 
 $stmtEcoponto->close();
 
-echo "OK - Nivel atualizado para {$porcentagem}%";
+echo json_encode([
+    'success' => true,
+    'message' => 'Status da lixeira atualizado com sucesso.',
+    'ecoponto_id' => $ecoponto_id,
+    'dispositivo_id' => $dispositivo_id,
+    'distancia' => $distancia,
+    'porcentagem' => $porcentagem
+]);
 
 $conn->close();

@@ -513,15 +513,15 @@
     try {
       ecopontos = JSON.parse(texto);
     } catch (e) {
-      console.error('Resposta não é JSON:', texto);
+      console.error('Resposta do listar_ecopontos.php não é JSON:', texto);
       throw e;
     }
+
+    console.log('Ecopontos atualizados:', new Date().toLocaleTimeString(), ecopontos);
 
     todosEcopontos = ecopontos;
     preencherFiltroCidades(ecopontos);
     aplicarFiltro();
-
-    console.log('Ecopontos atualizados:', new Date().toLocaleTimeString(), ecopontos);
 
   } catch (error) {
     console.error('Erro ao carregar ecopontos:', error);
