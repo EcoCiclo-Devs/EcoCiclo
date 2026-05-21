@@ -124,7 +124,6 @@
         <li><a href="../public/index.php">Início</a></li>
         <li><a href="ecopontos.php">Ecopontos</a></li>
         <li><a href="coleta_de_material.php">Coleta de Materiais</a></li>
-        <li><a href="faleconosco.html">Contato</a></li>
         <li><a href="login.php" class="btn btn-success">Sair</a></li>
       </ul>
     </nav>
@@ -497,24 +496,40 @@
   }
 
   async function carregarEcopontos() {
-    try {
-      const response = await fetch('../controllers/listar_ecopontos.php?ts=' + Date.now(), {
-        cache: 'no-store'
-      });
+  try {
+    const response = await fetch('../controllers/listar_ecopontos.php?ts=' + Date.now(), {
+      cache: 'no-store'
+    });
 
-      if (!response.ok) {
-        throw new Error('Falha ao buscar ecopontos');
-      }
+    const texto = await response.text();
 
-      const ecopontos = await response.json();
-
-      todosEcopontos = ecopontos;
-      preencherFiltroCidades(ecopontos);
-      aplicarFiltro();
-    } catch (error) {
-      console.error('Erro ao carregar ecopontos:', error);
+    if (!response.ok) {
+      console.error('Erro HTTP ao buscar ecopontos:', response.status, texto);
+      throw new Error('Falha ao buscar ecopontos');
     }
+
+    let ecopontos;
+
+    try {
+      ecopontos = JSON.parse(texto);
+    } catch (e) {
+      console.error('Resposta não é JSON:', texto);
+      throw e;
+    }
+
+    todosEcopontos = ecopontos;
+    preencherFiltroCidades(ecopontos);
+    aplicarFiltro();
+
+    console.log('Ecopontos atualizados:', new Date().toLocaleTimeString(), ecopontos);
+
+  } catch (error) {
+    console.error('Erro ao carregar ecopontos:', error);
   }
+}
+
+carregarEcopontos();
+setInterval(carregarEcopontos, 15000);
 
   document.getElementById('cidadeFilter').addEventListener('change', aplicarFiltro);
 
@@ -561,8 +576,7 @@
     });
   <?php endif; ?>
 
-  carregarEcopontos();
-  setInterval(carregarEcopontos, 30000);
+  
 </script>
 
 </body>

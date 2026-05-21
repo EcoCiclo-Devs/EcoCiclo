@@ -35,9 +35,9 @@
 
 <ul class="flex menu_list">
 
-<li><a href="painelrecicla.php">Painel Recicla</a></li>
+<li><a href="painelrecicla.php">PainelRecicla</a></li>
 <li><a href="administrador.html">Painel Administrativo</a></li>
- <li><a href="login_admin.php" class="btn btn-success">Sair</a></li>
+<li><a href="login_admin.php" class="btn btn-success">Sair</a></li>
 
 <?php if(isset($_SESSION['cidadao_nome'])): ?>
 

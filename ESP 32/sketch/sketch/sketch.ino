@@ -12,14 +12,14 @@
 
 LiquidCrystal_I2C lcd(LCD_ADDRESS, LCD_COLS, LCD_ROWS);
 
-const char* ssid = "Corinthians";
-const char* password = "ibge1234";
+const char* ssid = "juliaa";
+const char* password = "marlinho";
 
 // TOKEN da placa cadastrado no banco
 const char* deviceToken = "TOKEN123";
 
 // URL correta do seu receber.php
-const char* serverName = "http://10.194.91.94/PI-4-Semestre/EcoCiclo/controllers/receber.php";
+const char* serverName = "http://10.227.25.94/PI-4-Semestre/EcoCiclo/controllers/receber.php";
 
 // Calibração da lixeira
 float distanciaVazia = 40.0; // cm

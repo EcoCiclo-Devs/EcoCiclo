@@ -40,7 +40,6 @@
           <!-- <li><a href="#sobre">Sobre</a></li> -->
           <li><a href="../views/ecopontos.php">Ecopontos</a></li>
           <li><a href="../views/coleta_de_material.php">Coleta de Materiais</a></li>
-          <li><a href="../views/faleconosco.html">Contato</a></li>
           <li><a href="../views/login.php">Login</a></li>
           <?php if(isset($_SESSION['cidadao_nome'])): ?>
 
@@ -303,14 +302,6 @@
           </div>
 
         </div>
-
-        <!-- BOTÃO DE CHAMADA PARA AÇÃO -->
-        <div class="text-center mt-5">
-          <!-- href="faleconosco.html" PARA ATUALIZAR O DIRECIONAMENTO PARA A PAGINA -->
-          <a href="../views/faleconosco.html" class="btn btn-success btn-lg shadow-sm">Fale Conosco</a>
-        </div>
-      </div>
-    </section>
 
  
     <!-- SEÇÃO FOLHAS + TEXTO CENTRAL ANIMADA -->

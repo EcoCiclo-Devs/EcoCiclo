@@ -44,7 +44,6 @@ if(urlParams.get("cadastro") === "sucesso"){
                     <li><a href="../public/index.php">Início</a></li>
                     <!-- <li><a href="#sobre">Sobre</a></li> -->
                     <li><a href="./ecopontos.php">Ecopontos</a></li>
-                    <li><a href="./faleconosco.html">Contato</a></li>
                     <li><a href="./login.php">Login</a></li>
                 </ul>
             </nav>
