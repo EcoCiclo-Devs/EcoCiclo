@@ -28,7 +28,7 @@
 
 <div id="titulo">
 <img src="../public/assets/img/icone.svg" class="logo">
-<a href="../index.php" class="text-success fw-bold fs-3">EcoCiclo</a>
+<a href="../public/index.php" class="text-success fw-bold fs-3">EcoCiclo</a>
 </div>
 
 <nav>

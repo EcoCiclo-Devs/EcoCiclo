@@ -179,13 +179,15 @@
 
             <div class="tab-pane fade" id="agendamentos">
                 <div class="card p-4 shadow-sm border-success">
-                    <h4 class="fw-bold text-success mb-3">📅 Coletas Agendadas</h4>
+                    <h4 class="fw-bold text-success mb-3">Coletas Agendadas</h4>
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead class="table-light">
                                 <tr>
                                     <th>Data</th>
                                     <th>Hora</th>
+                                    <th>Cidadão</th>
+                                    <th>Telefone</th>
                                     <th>Endereço</th>
                                     <th>Materiais</th>
                                     <th>Ação</th>
@@ -207,15 +209,33 @@
     <div class="mb-5 pb-5"></div>
     <div class="mb-3 pb-3"></div>
 
-    <!-- Modal de Sucesso para Coleta Concluída -->
-    <div class="modal" id="modalSucessoConcluida">
+    <!-- Modal para Coleta Concluída -->
+    <div class="modal" id="modalConfirmarConcluir" style="display: none;">
         <div class="modal-box">
             <div class="icon">
                 <div class="checkmark"></div>
             </div>
-            <h2>Sucesso!</h2>
-            <p>Coleta concluída com sucesso!</p>
-            <button onclick="fecharModalSucesso()">OK</button>
+            <h2>Confirmar Coleta</h2>
+            <p>Deseja realmente marcar esta coleta como concluída?</p>
+            <div class="d-flex justify-content-center gap-2 mt-3">
+                <button onclick="fecharModalId('modalConfirmarConcluir')" class="btn btn-secondary text-white" style="background-color: #6c757d; border: none; padding: 10px 20px; border-radius: 5px;">Cancelar</button>
+                <button id="btnConfirmarConcluir" class="btn" style="background-color: #25c974; border: none; padding: 10px 20px; border-radius: 5px; color: white;">Sim, Concluir</button>
+            </div>
+        </div>
+    </div>
+
+<!-- Modal de Confirmação para Excluir Coleta -->
+    <div class="modal" id="modalConfirmarExcluir" style="display: none;">
+        <div class="modal-box">
+            <div class="icon" style="border-color: #dc3545;">
+                <div style="color: #dc3545; font-size: 32px; font-weight: bold; line-height: 50px; text-align: center;">!</div>
+            </div>
+            <h2 style="color: #dc3545;">Excluir Agendamento</h2>
+            <p>Deseja realmente excluir este agendamento? Esta ação não pode ser desfeita.</p>
+            <div class="d-flex justify-content-center gap-2 mt-3">
+                <button onclick="fecharModalId('modalConfirmarExcluir')" class="btn btn-secondary text-white" style="background-color: #6c757d; border: none; padding: 10px 20px; border-radius: 5px;">Cancelar</button>
+                <button id="btnConfirmarExcluir" class="btn text-white" style="background-color: #dc3545; border: none; padding: 10px 20px; border-radius: 5px;">Sim, Excluir</button>
+            </div>
         </div>
     </div>
 
@@ -358,10 +378,18 @@
             link.click();
         }
 
+        let idAgendamentoSelecionado = null;
+
+        // Função para fechar modal
+        function fecharModalId(idModal) {
+            const modal = document.getElementById(idModal);
+            if (modal) modal.style.display = 'none';
+        }
+
         async function carregarAgendamentos() {
             const tbody = document.getElementById("tabelaAgendamentosSemana");
 
-            tbody.innerHTML = '<tr><td colspan="5" class="text-center">Carregando...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center">Carregando...</td></tr>';
 
             try {
                 const response = await fetch('../controllers/listar_agendamentos.php');
@@ -371,7 +399,7 @@
                 const dados = await response.json();
 
                 if (dados.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" class="text-center">Nenhum agendamento encontrado.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="7" class="text-center">Nenhum agendamento encontrado.</td></tr>';
                     return;
                 }
 
@@ -380,15 +408,23 @@
                     let acaoHTML = "";
 
                     if (ag.status === "Concluído") {
-                        acaoHTML = '<span class="badge bg-success">Concluído</span>';
+                        acaoHTML = `
+                            <span class="badge bg-success me-1">Concluído</span>
+                            <button class="btn btn-sm btn-outline-danger" onclick="excluirAgendamento(${ag.id})">Excluir</button>
+                        `;
                     } else {
-                        acaoHTML = `<button class="btn btn-sm btn-success" onclick="concluirAgendamento(${ag.id})">Concluir</button>`;
+                        acaoHTML = `
+                            <button class="btn btn-sm btn-success me-1" onclick="concluirAgendamento(${ag.id})">Concluir</button>
+                            <button class="btn btn-sm btn-danger" onclick="excluirAgendamento(${ag.id})">Excluir</button>
+                        `;
                     }
 
                     tbody.innerHTML += `
                         <tr class="${ag.status === 'Concluído' ? 'table-light' : ''}">
                             <td>${ag.data_coleta}</td>
                             <td>${ag.hora_coleta}h</td>
+                            <td>${ag.nome || 'Não informado'}</td>
+                            <td>${ag.telefone || 'Não informado'}</td>
                             <td>${ag.endereco}</td>
                             <td><small>${ag.materiais}</small></td>
                             <td>${acaoHTML}</td>
@@ -396,16 +432,24 @@
                     `;
                 });
             } catch (error) {
-                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Erro de conexão com o servidor.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-danger">Erro de conexão com o servidor.</td></tr>';
                 console.error(error);
             }
         }
 
-        async function concluirAgendamento(id) {
-            if (!confirm("Deseja marcar esta coleta como concluída?")) return;
+        // Disparado ao clicar no botão "Concluir" da tabela
+        function concluirAgendamento(id) {
+            idAgendamentoSelecionado = id;
+            document.getElementById('modalConfirmarConcluir').style.display = 'flex';
+        }
+
+        // Evento do botão "Sim, Concluir" de dentro do modal estilizado
+        document.getElementById('btnConfirmarConcluir').addEventListener('click', async () => {
+            fecharModalId('modalConfirmarConcluir');
+            if (!idAgendamentoSelecionado) return;
 
             try {
-                const response = await fetch(`../controllers/concluir_agendamento.php?id=${id}`);
+                const response = await fetch(`../controllers/concluir_agendamento.php?id=${idAgendamentoSelecionado}`);
                 const resultado = await response.json();
 
                 if (resultado.sucesso) {
@@ -417,7 +461,33 @@
                 console.error("Erro:", error);
                 alert("Erro de conexão com o servidor.");
             }
+        });
+
+        // Disparado ao clicar no botão "Excluir" da tabela
+        function excluirAgendamento(id) {
+            idAgendamentoSelecionado = id;
+            document.getElementById('modalConfirmarExcluir').style.display = 'flex';
         }
+
+        // Evento do botão "Sim, Excluir" de dentro do modal estilizado
+        document.getElementById('btnConfirmarExcluir').addEventListener('click', async () => {
+            fecharModalId('modalConfirmarExcluir');
+            if (!idAgendamentoSelecionado) return;
+
+            try {
+                const response = await fetch(`../controllers/excluir_agendamento.php?id=${idAgendamentoSelecionado}`);
+                const resultado = await response.json();
+
+                if (resultado.sucesso) {
+                    carregarAgendamentos();
+                } else {
+                    alert("Erro ao excluir agendamento: " + (resultado.erro || "Desconhecido"));
+                }
+            } catch (error) {
+                console.error("Erro:", error);
+                alert("Erro de conexão com o servidor.");
+            }
+        });
 
         window.onload = function () {
             carregarAgendamentos();

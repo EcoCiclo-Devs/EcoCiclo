@@ -29,6 +29,8 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `agendamentos` (
   `id` int(11) NOT NULL,
+  `nome` varchar(100) NOT NULL,
+  `telefone` varchar(15) NOT NULL,
   `cep` varchar(9) NOT NULL,
   `endereco` varchar(255) NOT NULL,
   `data_coleta` date NOT NULL,

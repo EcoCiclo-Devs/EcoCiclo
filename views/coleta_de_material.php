@@ -52,7 +52,7 @@
         <article class="menu_container flex">
             <div id="titulo">
                 <img src="../public/assets/img/icone.svg" class="logo">
-                <a href="../index.php" class="text-success fw-bold fs-3">EcoCiclo</a>
+                <a href="../public/index.php" class="text-success fw-bold fs-3">EcoCiclo</a>
             </div>
             <nav>
                 <ul class="flex menu_list">
@@ -78,15 +78,25 @@
                     <div class="col-lg-6">
                         <div class="agenda-card">
                             <form action="../controllers/agendar_coleta.php" method="POST" onsubmit="validarEnvio(event)">
-                                
+    
                                 <div class="mt-3">
-                                    <label class="form-label fw-bold">CEP (Opcional)</label>
-                                    <input type="text" name="cep" id="cep" class="form-control" placeholder="00000-000" onblur="buscarCEP()">
+                                    <label class="form-label fw-bold">Nome Completo</label>
+                                        <input type="text" name="nome" id="nome" class="form-control" placeholder="Digite seu nome" required>
+                                 </div>
+
+                                <div class="mt-3">
+                                    <label class="form-label fw-bold">Telefone</label>
+                                         <input type="tel" name="telefone" id="telefone" class="form-control" placeholder="(19) 99999-9999" required>
                                 </div>
 
                                 <div class="mt-3">
+                                    <label class="form-label fw-bold">CEP (Opcional)</label>
+                                          <input type="text" name="cep" id="cep" class="form-control" placeholder="00000-000" onblur="buscarCEP()">
+                                 </div>
+
+                                <div class="mt-3">
                                     <label class="form-label fw-bold">Endereço Completo</label>
-                                    <input type="text" name="endereco" id="endereco" class="form-control" required>
+                                          <input type="text" name="endereco" id="endereco" class="form-control" required>
                                 </div>
 
                                 <div class="mt-4">
