@@ -4,7 +4,9 @@ require_once('../config/database.php');
 $bancodedados = new db();
 $link = $bancodedados->conecta_mysql();
 
-// 2. Recebe os dados enviados pelo formulário da coleta
+// 2. Recebe os dados enviados pelo formulário da coleta (Incluindo Nome e Telefone)
+$nome        = $_POST['nome'] ?? '';
+$telefone    = $_POST['telefone'] ?? '';
 $cep         = $_POST['cep'] ?? '';
 $endereco    = $_POST['endereco'] ?? '';
 $data_coleta = $_POST['data_coleta'] ?? '';
@@ -14,12 +16,16 @@ $materiais = isset($_POST['material']) ? implode(", ", $_POST['material']) : "N�
 
 // 3. Verifica se a conexão deu certo
 if ($link) {
+    // Limpeza dos dados contra SQL Injection
+    $nome     = mysqli_real_escape_string($link, $nome);
+    $telefone = mysqli_real_escape_string($link, $telefone);
     $cep      = mysqli_real_escape_string($link, $cep);
     $endereco = mysqli_real_escape_string($link, $endereco);
     $materiais = mysqli_real_escape_string($link, $materiais);
 
-    $sql = "INSERT INTO agendamentos (cep, endereco, data_coleta, hora_coleta, materiais) 
-            VALUES ('$cep', '$endereco', '$data_coleta', '$hora_coleta', '$materiais')";
+    // SQL atualizado com nome e telefone
+    $sql = "INSERT INTO agendamentos (nome, telefone, cep, endereco, data_coleta, hora_coleta, materiais) 
+            VALUES ('$nome', '$telefone', '$cep', '$endereco', '$data_coleta', '$hora_coleta', '$materiais')";
 
     if (mysqli_query($link, $sql)) {
         header('Content-Type: application/json');

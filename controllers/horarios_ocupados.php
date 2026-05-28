@@ -10,7 +10,9 @@ $ocupados = [];
 if ($data) {
     $data_segura = mysqli_real_escape_string($link, $data);
     
-    $sql = "SELECT hora_coleta FROM agendamentos WHERE data_coleta = '$data_segura'";
+    $sql = "SELECT hora_coleta FROM agendamentos 
+        WHERE data_coleta = '$data_segura' 
+        AND status != 'Excluido'";
     $resultado = mysqli_query($link, $sql);
 
     if ($resultado) {

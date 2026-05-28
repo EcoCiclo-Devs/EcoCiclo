@@ -7,8 +7,11 @@ $link = $bancodedados->conecta_mysql();
 $agendamentos = [];
 
 if ($link) {
-    // Busca os agendamentos da semana
-    $sql = "SELECT id, data_coleta, hora_coleta, endereco, materiais, status FROM agendamentos ORDER BY data_coleta DESC";
+    // ATUALIZADO: Incluído os campos 'nome' e 'telefone' na busca do banco de dados
+    $sql = "SELECT id, nome, telefone, data_coleta, hora_coleta, endereco, materiais, status 
+        FROM agendamentos 
+        WHERE status != 'Excluido' 
+        ORDER BY data_coleta DESC";
     $resultado = mysqli_query($link, $sql);
 
     while ($row = mysqli_fetch_assoc($resultado)) {
@@ -22,3 +25,4 @@ if ($link) {
 
 header('Content-Type: application/json');
 echo json_encode($agendamentos);
+?>
