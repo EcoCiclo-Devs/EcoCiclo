@@ -72,7 +72,7 @@ if(urlParams.get("cadastro") === "sucesso"){
 
                             <!-- Botão de Login -->
                             <div class="d-grid mt-3">
-                                <a href="painelrecicla.php" class="btn btn-success btn-lg">Entrar</a>
+                                <a href="administrador.html" class="btn btn-success btn-lg">Entrar</a>
                             </div>
 
                             <!-- Links lado a lado -->

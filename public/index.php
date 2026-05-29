@@ -40,7 +40,6 @@
           <!-- <li><a href="#sobre">Sobre</a></li> -->
           <li><a href="../views/ecopontos.php">Ecopontos</a></li>
           <li><a href="../views/coleta_de_material.php">Coleta de Materiais</a></li>
-          <li><a href="../views/login.php">Login</a></li>
           <?php if(isset($_SESSION['cidadao_nome'])): ?>
 
             <li class="nav-item dropdown">

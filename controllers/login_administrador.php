@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['funcionario_nome'] = $funcionario['nome'];
                     // sinaliza sucesso para mostrar modal e redirecionar em client-side
                     $loginSuccess = true;
-                    $redirectAfter = 'adminDashboard.php';
+                    $redirectAfter = '../administrador.html';
                 } else {
                     $msg = 'Número de registro ou senha incorretos.';
                     $msg_class = 'erro';

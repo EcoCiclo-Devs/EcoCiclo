@@ -43,7 +43,6 @@ if ($porcentagem < 0 || $porcentagem > 100) {
     exit;
 }
 
-// Procura a ESP32 e o ecoponto vinculado
 $sqlBusca = "
 SELECT 
     e.id AS ecoponto_id,
@@ -86,97 +85,119 @@ $dispositivo_id = (int)$dados['dispositivo_id'];
 
 $stmtBusca->close();
 
-// Atualiza ou insere o status atual da lixeira
-$sqlStatus = "
-INSERT INTO status_lixeiras (
-    ecoponto_id,
-    dispositivo_id,
-    distancia_cm,
-    nivel_percentual,
-    atualizado_em
-)
-VALUES (?, ?, ?, ?, NOW())
-ON DUPLICATE KEY UPDATE
-    dispositivo_id = VALUES(dispositivo_id),
-    distancia_cm = VALUES(distancia_cm),
-    nivel_percentual = VALUES(nivel_percentual),
-    atualizado_em = NOW()
-";
+$conn->begin_transaction();
 
-$stmtStatus = $conn->prepare($sqlStatus);
+try {
+    $sqlStatus = "
+    INSERT INTO status_lixeiras (
+        ecoponto_id,
+        dispositivo_id,
+        distancia_cm,
+        nivel_percentual,
+        atualizado_em
+    )
+    VALUES (?, ?, ?, ?, NOW())
+    ON DUPLICATE KEY UPDATE
+        dispositivo_id = VALUES(dispositivo_id),
+        distancia_cm = VALUES(distancia_cm),
+        nivel_percentual = VALUES(nivel_percentual),
+        atualizado_em = NOW()
+    ";
 
-if (!$stmtStatus) {
+    $stmtStatus = $conn->prepare($sqlStatus);
+
+    if (!$stmtStatus) {
+        throw new Exception("Erro ao preparar status: " . $conn->error);
+    }
+
+    $stmtStatus->bind_param(
+        "iidi",
+        $ecoponto_id,
+        $dispositivo_id,
+        $distancia,
+        $porcentagem
+    );
+
+    if (!$stmtStatus->execute()) {
+        throw new Exception("Erro ao atualizar status: " . $stmtStatus->error);
+    }
+
+    $stmtStatus->close();
+
+    $sqlEcoponto = "
+    UPDATE ecopontos
+    SET 
+        nivel_lixo = ?,
+        atualizado_em = NOW()
+    WHERE id = ?
+    ";
+
+    $stmtEcoponto = $conn->prepare($sqlEcoponto);
+
+    if (!$stmtEcoponto) {
+        throw new Exception("Erro ao preparar ecoponto: " . $conn->error);
+    }
+
+    $stmtEcoponto->bind_param("ii", $porcentagem, $ecoponto_id);
+
+    if (!$stmtEcoponto->execute()) {
+        throw new Exception("Erro ao atualizar ecoponto: " . $stmtEcoponto->error);
+    }
+
+    $stmtEcoponto->close();
+
+    $sqlHistorico = "
+    INSERT INTO historico_lixeiras (
+        ecoponto_id,
+        dispositivo_id,
+        distancia_cm,
+        nivel_percentual,
+        sinal_valido,
+        registrado_em
+    )
+    VALUES (?, ?, ?, ?, 1, NOW())
+    ";
+
+    $stmtHistorico = $conn->prepare($sqlHistorico);
+
+    if (!$stmtHistorico) {
+        throw new Exception("Erro ao preparar histórico: " . $conn->error);
+    }
+
+    $stmtHistorico->bind_param(
+        "iidi",
+        $ecoponto_id,
+        $dispositivo_id,
+        $distancia,
+        $porcentagem
+    );
+
+    if (!$stmtHistorico->execute()) {
+        throw new Exception("Erro ao salvar histórico: " . $stmtHistorico->error);
+    }
+
+    $stmtHistorico->close();
+
+    $conn->commit();
+
+    echo json_encode([
+        'success' => true,
+        'message' => 'Status da lixeira atualizado com sucesso.',
+        'ecoponto_id' => $ecoponto_id,
+        'dispositivo_id' => $dispositivo_id,
+        'distancia' => $distancia,
+        'porcentagem' => $porcentagem
+    ]);
+
+} catch (Exception $e) {
+    $conn->rollback();
+
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'message' => 'Erro ao preparar atualização do status.',
-        'error' => $conn->error
+        'message' => 'Erro ao salvar dados.',
+        'error' => $e->getMessage()
     ]);
-    exit;
 }
-
-$stmtStatus->bind_param(
-    "iidi",
-    $ecoponto_id,
-    $dispositivo_id,
-    $distancia,
-    $porcentagem
-);
-
-if (!$stmtStatus->execute()) {
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Erro ao atualizar status da lixeira.',
-        'error' => $stmtStatus->error
-    ]);
-    exit;
-}
-
-$stmtStatus->close();
-
-// Atualiza a tabela ecopontos, que é usada pelo mapa/listagem
-$sqlEcoponto = "
-UPDATE ecopontos
-SET 
-    nivel_lixo = ?,
-    atualizado_em = NOW()
-WHERE id = ?
-";
-
-$stmtEcoponto = $conn->prepare($sqlEcoponto);
-
-if (!$stmtEcoponto) {
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Erro ao preparar atualização do ecoponto.',
-        'error' => $conn->error
-    ]);
-    exit;
-}
-
-$stmtEcoponto->bind_param("ii", $porcentagem, $ecoponto_id);
-
-if (!$stmtEcoponto->execute()) {
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Erro ao atualizar ecoponto.',
-        'error' => $stmtEcoponto->error
-    ]);
-    exit;
-}
-
-$stmtEcoponto->close();
-
-echo json_encode([
-    'success' => true,
-    'message' => 'Status da lixeira atualizado com sucesso.',
-    'ecoponto_id' => $ecoponto_id,
-    'dispositivo_id' => $dispositivo_id,
-    'distancia' => $distancia,
-    'porcentagem' => $porcentagem
-]);
 
 $conn->close();
